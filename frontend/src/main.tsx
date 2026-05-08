@@ -5,6 +5,7 @@ import { AppProviders } from "./components/AppProviders";
 import "./i18n";
 import "antd/dist/reset.css";
 import "./styles/global.css";
+import { registerPwaServiceWorker } from "./lib/pwa";
 
 async function enableMocking() {
   if (import.meta.env.VITE_ENABLE_MOCKS !== "true") {
@@ -21,4 +22,5 @@ void enableMocking().then(() => {
       <AppProviders />
     </React.StrictMode>,
   );
+  void registerPwaServiceWorker({ isProduction: import.meta.env.PROD });
 });

@@ -4,6 +4,7 @@ import { BookOpenCheck, Code2, GitBranch, Rocket, Sparkles } from "lucide-react"
 import { AntdWorkbenchPreview } from "../components/AntdWorkbenchPreview";
 import { p3LearningMilestones } from "../data/p3Architecture";
 import { p4LearningMilestones } from "../data/p4LearningRoadmap";
+import { p5LearningMilestones } from "../data/p5LearningRoadmap";
 
 const chapters = [
   {
@@ -117,6 +118,27 @@ export function LearnPage() {
 
         <div className="grid gap-3 md:grid-cols-4">
           {p4LearningMilestones.map((milestone) => (
+            <article
+              className="rounded-ui border border-line bg-surface p-4 shadow-soft"
+              key={milestone.id}
+            >
+              <span className="eyebrow">{milestone.status}</span>
+              <h3 className="mb-2 mt-3 text-lg font-extrabold">{milestone.label}</h3>
+              <p className="m-0 text-sm text-muted">{milestone.evidence}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-8">
+        <div className="section-heading">
+          <span className="eyebrow">P5 mastery</span>
+          <h2>Frontend mastery track</h2>
+          <p>PWA、性能预算、安全隐私、视觉回归、设计系统和状态建模会继续拆小提交推进。</p>
+        </div>
+
+        <div className="grid gap-3 md:grid-cols-3">
+          {p5LearningMilestones.map((milestone) => (
             <article
               className="rounded-ui border border-line bg-surface p-4 shadow-soft"
               key={milestone.id}

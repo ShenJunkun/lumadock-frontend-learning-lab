@@ -25,5 +25,7 @@ describe("LearnPage", () => {
     expect(screen.getByText("Privacy-safe telemetry")).toBeInTheDocument();
     expect(screen.getByText("Data prefetch")).toBeInTheDocument();
     expect(screen.getByText("Booking form drafts")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Frontend mastery track" })).toBeInTheDocument();
+    expect(screen.getByText("PWA / offline shell")).toBeInTheDocument();
   });
 });
