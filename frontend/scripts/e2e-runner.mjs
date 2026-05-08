@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const viteBin = join(root, "node_modules", "vite", "bin", "vite.js");
 const playwrightCli = join(root, "node_modules", "@playwright", "test", "cli.js");
+const playwrightArgs = process.argv.slice(2);
 
 function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -73,7 +74,7 @@ try {
     throw new Error(`Vite exited before tests started with code ${serverExitCode}`);
   }
 
-  const tests = spawn(process.execPath, [playwrightCli, "test"], {
+  const tests = spawn(process.execPath, [playwrightCli, "test", ...playwrightArgs], {
     cwd: root,
     env: process.env,
     stdio: "inherit",
