@@ -1,6 +1,12 @@
 export const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") ?? "http://127.0.0.1:8001";
 
+let authTokenProvider: () => string | null = () => null;
+
+export function setAuthTokenProvider(provider: () => string | null) {
+  authTokenProvider = provider;
+}
+
 export class ApiError extends Error {
   constructor(
     message: string,
@@ -12,9 +18,11 @@ export class ApiError extends Error {
 }
 
 export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
+  const token = authTokenProvider();
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...init,
     headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       "Content-Type": "application/json",
       ...init?.headers,
     },

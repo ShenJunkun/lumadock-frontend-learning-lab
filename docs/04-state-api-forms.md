@@ -60,3 +60,10 @@ viewer@lumadock.local / viewer123
 - `admin` 可以访问后台 leads 列表。
 - `viewer` 可以登录，但访问后台 leads 会得到 403。
 - 未登录访问受保护接口会得到 401。
+
+前端认证数据流：
+
+- `authStore` 保存 `token`、`user` 和 `isAuthenticated`。
+- `apiRequest` 通过 token provider 自动追加 `Authorization` 请求头。
+- `PrivateRoute` 负责未登录跳转 `/login`。
+- `RoleRoute` 负责角色检查和 403 状态展示。
