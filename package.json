@@ -13,6 +13,8 @@
     "frontend:e2e": "npm.cmd --prefix frontend run test:e2e",
     "backend:dev": "conda run -n frontend-product-lab uvicorn app.main:app --app-dir backend --reload --host 127.0.0.1 --port 8001",
     "backend:test": "conda run -n frontend-product-lab pytest backend",
+    "hooks:install": "node frontend/node_modules/husky/bin.js",
+    "precommit": "node frontend/node_modules/lint-staged/bin/lint-staged.js --config lint-staged.config.mjs",
     "verify": "npm.cmd --prefix frontend run lint && npm.cmd --prefix frontend run format:check && npm.cmd --prefix frontend run typecheck && npm.cmd --prefix frontend run test && npm.cmd --prefix frontend run build && conda run -n frontend-product-lab pytest backend"
   },
   "engines": {
