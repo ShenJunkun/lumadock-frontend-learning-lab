@@ -108,4 +108,3 @@ export function ConfiguratorPanel({ basePrice = 289 }: ConfiguratorPanelProps) {
     </section>
   );
 }
-

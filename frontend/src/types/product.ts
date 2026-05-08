@@ -32,4 +32,3 @@ export type LeadResponse = LeadPayload & {
   id: number;
   created_at: string;
 };
-

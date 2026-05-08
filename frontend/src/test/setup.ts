@@ -37,4 +37,5 @@ class IntersectionObserverMock {
 }
 
 globalThis.ResizeObserver = ResizeObserverMock as unknown as typeof ResizeObserver;
-globalThis.IntersectionObserver = IntersectionObserverMock as unknown as typeof IntersectionObserver;
+globalThis.IntersectionObserver =
+  IntersectionObserverMock as unknown as typeof IntersectionObserver;

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { leadFormSchema } from "./LeadForm";
+import { leadFormSchema } from "./leadFormSchema";
 
 describe("lead form validation", () => {
   it("accepts a valid local booking request", () => {
@@ -32,4 +32,3 @@ describe("lead form validation", () => {
     }
   });
 });
-

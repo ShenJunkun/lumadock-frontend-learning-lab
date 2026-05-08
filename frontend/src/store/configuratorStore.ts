@@ -69,4 +69,3 @@ export const useConfiguratorStore = create<ConfiguratorState>((set, get) => ({
     };
   },
 }));
-

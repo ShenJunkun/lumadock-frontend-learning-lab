@@ -40,7 +40,9 @@ export function CatalogPage() {
         />
       </label>
 
-      {productsQuery.isLoading && <LoadingState title="Loading catalog" message="Fetching products from FastAPI." />}
+      {productsQuery.isLoading && (
+        <LoadingState title="Loading catalog" message="Fetching products from FastAPI." />
+      )}
       {productsQuery.isError && (
         <ErrorState
           title="Local API unavailable"
@@ -60,4 +62,3 @@ export function CatalogPage() {
     </section>
   );
 }
-

@@ -7,4 +7,3 @@ export function submitLead(payload: LeadPayload) {
     method: "POST",
   });
 }
-

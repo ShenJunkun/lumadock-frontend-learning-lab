@@ -37,7 +37,10 @@ export function BookingPage() {
         <aside className="booking-summary">
           <label>
             <span>Product</span>
-            <select value={selectedProduct.id} onChange={(event) => setSelectedId(event.target.value)}>
+            <select
+              value={selectedProduct.id}
+              onChange={(event) => setSelectedId(event.target.value)}
+            >
               {products.map((product) => (
                 <option key={product.id} value={product.id}>
                   {product.name}
@@ -57,4 +60,3 @@ export function BookingPage() {
     </section>
   );
 }
-

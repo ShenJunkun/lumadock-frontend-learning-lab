@@ -49,10 +49,14 @@ async function stopProcess(processRef) {
   clearTimeout(forceKill);
 }
 
-const server = spawn(process.execPath, [viteBin, "--host", "127.0.0.1", "--port", "5173", "--strictPort"], {
-  cwd: root,
-  stdio: "inherit",
-});
+const server = spawn(
+  process.execPath,
+  [viteBin, "--host", "127.0.0.1", "--port", "5173", "--strictPort"],
+  {
+    cwd: root,
+    stdio: "inherit",
+  },
+);
 
 let serverExitCode = null;
 server.once("exit", (code) => {
@@ -79,4 +83,3 @@ try {
   console.error(error);
   process.exit(1);
 }
-

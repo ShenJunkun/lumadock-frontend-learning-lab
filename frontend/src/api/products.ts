@@ -36,4 +36,3 @@ export function useStats() {
     queryFn: getStats,
   });
 }
-

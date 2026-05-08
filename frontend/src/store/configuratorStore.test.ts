@@ -20,4 +20,3 @@ describe("configurator store", () => {
     });
   });
 });
-

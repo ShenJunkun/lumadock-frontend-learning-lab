@@ -66,4 +66,3 @@ export function ProductScene({ accent = "#16a3a3" }: ProductSceneProps) {
     </div>
   );
 }
-

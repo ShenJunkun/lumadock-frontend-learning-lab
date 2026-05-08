@@ -10,9 +10,21 @@ import { ErrorState, LoadingState } from "../components/StateBlocks";
 import { fallbackProducts } from "../data/fallbackProducts";
 
 const featureTiles = [
-  { icon: Cpu, title: "Adaptive port memory", copy: "Profiles keep desk, travel, and studio devices ready." },
-  { icon: Gauge, title: "Focused status surface", copy: "Subtle light states show power, sync, and display flow." },
-  { icon: ShieldCheck, title: "Local-first demo", copy: "The app talks only to the local FastAPI service." },
+  {
+    icon: Cpu,
+    title: "Adaptive port memory",
+    copy: "Profiles keep desk, travel, and studio devices ready.",
+  },
+  {
+    icon: Gauge,
+    title: "Focused status surface",
+    copy: "Subtle light states show power, sync, and display flow.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Local-first demo",
+    copy: "The app talks only to the local FastAPI service.",
+  },
 ];
 
 export function HomePage() {
@@ -88,7 +100,9 @@ export function HomePage() {
             React Three Fiber renders a lightweight product model while Framer Motion handles page
             movement and reveal timing.
           </p>
-          {productsQuery.isLoading && <LoadingState title="Loading catalog" message="Checking the local API." />}
+          {productsQuery.isLoading && (
+            <LoadingState title="Loading catalog" message="Checking the local API." />
+          )}
           {productsQuery.isError && (
             <ErrorState
               title="Using local fallback data"
@@ -124,4 +138,3 @@ export function HomePage() {
     </>
   );
 }
-

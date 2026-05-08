@@ -5,7 +5,10 @@ type StateBlockProps = {
   message: string;
 };
 
-export function LoadingState({ title = "Loading", message = "Fetching fresh data." }: Partial<StateBlockProps>) {
+export function LoadingState({
+  title = "Loading",
+  message = "Fetching fresh data.",
+}: Partial<StateBlockProps>) {
   return (
     <div className="state-block" role="status">
       <Loader2 className="state-icon spin" size={24} aria-hidden="true" />
@@ -34,4 +37,3 @@ export function EmptyState({ title, message }: StateBlockProps) {
     </div>
   );
 }
-

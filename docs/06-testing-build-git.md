@@ -3,6 +3,8 @@
 ## 前端验证
 
 ```powershell
+npm.cmd --prefix frontend run lint
+npm.cmd --prefix frontend run format:check
 npm.cmd --prefix frontend run typecheck
 npm.cmd --prefix frontend run test
 npm.cmd --prefix frontend run build
@@ -59,3 +61,14 @@ docs: complete project tutorial and runbook
 ```
 
 本项目独立在 `D:\code\frontend-learning-product-lab`，不要提交到 RadarAgent。
+
+## 代码规范
+
+前端使用 ESLint 做 TypeScript、React Hooks 和 React Refresh 规则检查，Prettier 负责格式统一：
+
+```powershell
+npm.cmd --prefix frontend run lint
+npm.cmd --prefix frontend run lint:fix
+npm.cmd --prefix frontend run format:check
+npm.cmd --prefix frontend run format
+```

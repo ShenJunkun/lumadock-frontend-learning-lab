@@ -44,6 +44,8 @@ npm.cmd --prefix frontend run dev
 
 ```powershell
 npm.cmd --prefix frontend run typecheck
+npm.cmd --prefix frontend run lint
+npm.cmd --prefix frontend run format:check
 npm.cmd --prefix frontend run test
 npm.cmd --prefix frontend run build
 conda run -n frontend-product-lab pytest backend
@@ -64,4 +66,3 @@ npm.cmd --prefix frontend exec playwright install
 ## 学习路线
 
 从 [docs/00-roadmap.md](docs/00-roadmap.md) 开始，按章节完成环境、HTML/CSS/JS/TS、React 组件、路由、状态、API、表单、动画、测试、构建和 git 提交流程。
-
