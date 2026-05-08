@@ -1,3 +1,4 @@
+import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
 test("home, catalog, detail, and booking flow", async ({ page }) => {
@@ -42,4 +43,19 @@ test("viewer login is blocked from admin leads", async ({ page }) => {
   await page.getByRole("button", { name: "Login" }).click();
 
   await expect(page.getByText("No access")).toBeVisible();
+});
+
+test("home page supports keyboard entry and has no critical a11y violations", async ({ page }) => {
+  await page.goto("/");
+
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page.locator("#main-content")).toBeFocused();
+
+  const accessibilityScanResults = await new AxeBuilder({ page })
+    .exclude(".product-scene")
+    .analyze();
+
+  expect(accessibilityScanResults.violations).toEqual([]);
 });

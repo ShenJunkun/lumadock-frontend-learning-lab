@@ -34,6 +34,7 @@ export function LeadForm({ productId }: LeadFormProps) {
       consent: false,
     },
     resolver: zodResolver(leadFormSchema),
+    shouldFocusError: true,
   });
 
   const onSubmit = handleSubmit(async (values) => {

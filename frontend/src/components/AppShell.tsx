@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import { useAuthStore } from "../store/authStore";
+import { RouteFocus } from "./RouteFocus";
 import {
   languageOptions,
   themeModeOptions,
@@ -51,6 +52,10 @@ export function AppShell({ children }: AppShellProps) {
 
   return (
     <div className="app-shell">
+      <a className="skip-link" href="#main-content">
+        Skip to content
+      </a>
+      <RouteFocus />
       <header className="site-header">
         <NavLink className="brand" to="/" aria-label="LumaDock home">
           <span className="brand-mark" aria-hidden="true">
@@ -130,7 +135,9 @@ export function AppShell({ children }: AppShellProps) {
           </div>
         </nav>
       </header>
-      <main>{children}</main>
+      <main id="main-content" tabIndex={-1}>
+        {children}
+      </main>
       <footer className="site-footer">
         <span>{t("shell.footerLab")}</span>
         <span>{t("shell.footerStack")}</span>
