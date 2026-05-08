@@ -1,5 +1,7 @@
 import { BookOpenCheck, Code2, GitBranch, Rocket, Sparkles } from "lucide-react";
 
+import { AntdWorkbenchPreview } from "../components/AntdWorkbenchPreview";
+
 const chapters = [
   {
     icon: Rocket,
@@ -74,6 +76,8 @@ export function LearnPage() {
           );
         })}
       </div>
+
+      <AntdWorkbenchPreview />
     </section>
   );
 }
