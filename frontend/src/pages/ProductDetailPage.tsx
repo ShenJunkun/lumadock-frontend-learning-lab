@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 
 import { useProduct } from "../api/products";
 import { ConfiguratorPanel } from "../components/ConfiguratorPanel";
+import { ProductSceneBoundary } from "../components/ProductSceneBoundary";
 import { ProductScene } from "../components/ProductScene";
 import { ErrorState, LoadingState } from "../components/StateBlocks";
 import { fallbackProducts } from "../data/fallbackProducts";
@@ -50,7 +51,9 @@ export function ProductDetailPage() {
           )}
         </div>
         <div className="detail-stage">
-          <ProductScene accent={product.accent} />
+          <ProductSceneBoundary>
+            <ProductScene accent={product.accent} />
+          </ProductSceneBoundary>
         </div>
       </div>
 

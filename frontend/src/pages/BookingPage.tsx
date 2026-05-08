@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 
 import { useProducts } from "../api/products";
 import { LeadForm } from "../components/LeadForm";
+import { ProductSceneBoundary } from "../components/ProductSceneBoundary";
 import { ProductScene } from "../components/ProductScene";
 import { ErrorState } from "../components/StateBlocks";
 import { fallbackProducts } from "../data/fallbackProducts";
@@ -48,7 +49,9 @@ export function BookingPage() {
               ))}
             </select>
           </label>
-          <ProductScene accent={selectedProduct.accent} />
+          <ProductSceneBoundary>
+            <ProductScene accent={selectedProduct.accent} />
+          </ProductSceneBoundary>
           <div>
             <span className="eyebrow">{selectedProduct.category}</span>
             <h2>{selectedProduct.name}</h2>

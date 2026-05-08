@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { Button, Descriptions, Modal, Result, Table, Tag } from "antd";
+import { Button, Descriptions, Modal, Result, Table, Tag, notification } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import { useEffect } from "react";
 import { useMemo, useState } from "react";
 
 import { getAdminLeads } from "../api/admin";
@@ -12,6 +13,15 @@ export function AdminPage() {
     queryFn: getAdminLeads,
     queryKey: ["admin", "leads"],
   });
+
+  useEffect(() => {
+    if (leadsQuery.isError) {
+      notification.error({
+        description: "Start FastAPI on port 8001 and log in with an admin token.",
+        title: "Admin API unavailable",
+      });
+    }
+  }, [leadsQuery.isError]);
 
   const columns = useMemo<ColumnsType<AdminLead>>(
     () => [

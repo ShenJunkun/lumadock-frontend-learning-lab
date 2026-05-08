@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { Alert, Button, Form, Input } from "antd";
+import { Alert, Button, Form, Input, message } from "antd";
 import type { Location } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -24,10 +24,15 @@ export function LoginPage() {
   });
 
   const onFinish = async (values: LoginFormValues) => {
-    const response = await mutation.mutateAsync(values);
-    setSession(response);
-    const state = location.state as LoginLocationState | null;
-    navigate(state?.from?.pathname ?? "/admin", { replace: true });
+    try {
+      const response = await mutation.mutateAsync(values);
+      setSession(response);
+      void message.success(`Welcome back, ${response.user.name}.`);
+      const state = location.state as LoginLocationState | null;
+      navigate(state?.from?.pathname ?? "/admin", { replace: true });
+    } catch {
+      void message.error("Login failed. Check the local API and demo credentials.");
+    }
   };
 
   return (

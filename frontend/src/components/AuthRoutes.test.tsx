@@ -1,6 +1,17 @@
 import { render, screen } from "@testing-library/react";
 import { Route, Routes, MemoryRouter } from "react-router-dom";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+vi.mock("antd", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("antd")>();
+  return {
+    ...actual,
+    notification: {
+      ...actual.notification,
+      warning: vi.fn(),
+    },
+  };
+});
 
 import { PrivateRoute, RoleRoute } from "./AuthRoutes";
 import { useAuthStore } from "../store/authStore";

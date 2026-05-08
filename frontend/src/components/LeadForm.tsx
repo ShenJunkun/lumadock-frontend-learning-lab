@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { message } from "antd";
 import { Send } from "lucide-react";
 import { useForm } from "react-hook-form";
 
@@ -36,24 +37,29 @@ export function LeadForm({ productId }: LeadFormProps) {
   });
 
   const onSubmit = handleSubmit(async (values) => {
-    await mutation.mutateAsync({
-      product_id: values.productId || productId,
-      name: values.name,
-      email: values.email,
-      company: values.company || undefined,
-      role: values.role || undefined,
-      message: values.message || undefined,
-      configuration: snapshot(),
-    });
-    reset({
-      productId,
-      name: "",
-      email: "",
-      company: "",
-      role: "",
-      message: "",
-      consent: false,
-    });
+    try {
+      await mutation.mutateAsync({
+        product_id: values.productId || productId,
+        name: values.name,
+        email: values.email,
+        company: values.company || undefined,
+        role: values.role || undefined,
+        message: values.message || undefined,
+        configuration: snapshot(),
+      });
+      void message.success("Request saved locally.");
+      reset({
+        productId,
+        name: "",
+        email: "",
+        company: "",
+        role: "",
+        message: "",
+        consent: false,
+      });
+    } catch {
+      void message.error("Could not reach the local API.");
+    }
   });
 
   return (

@@ -8,6 +8,7 @@ import {
   PackageSearch,
   ShieldCheck,
 } from "lucide-react";
+import { message } from "antd";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -44,6 +45,7 @@ export function AppShell({ children }: AppShellProps) {
 
   const handleLogout = () => {
     logout();
+    void message.success("Logged out.");
     navigate("/");
   };
 

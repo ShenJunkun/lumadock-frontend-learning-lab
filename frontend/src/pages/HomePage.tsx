@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useProducts, useStats } from "../api/products";
 import { ConfiguratorPanel } from "../components/ConfiguratorPanel";
 import { ProductCard } from "../components/ProductCard";
+import { ProductSceneBoundary } from "../components/ProductSceneBoundary";
 import { ProductScene } from "../components/ProductScene";
 import { ScrollReveal } from "../components/ScrollReveal";
 import { ErrorState, LoadingState } from "../components/StateBlocks";
@@ -111,7 +112,9 @@ export function HomePage() {
           )}
         </ScrollReveal>
         <ScrollReveal className="showcase-stage" delay={0.08}>
-          <ProductScene accent={featured.accent} />
+          <ProductSceneBoundary>
+            <ProductScene accent={featured.accent} />
+          </ProductSceneBoundary>
         </ScrollReveal>
         <ScrollReveal delay={0.14}>
           <ConfiguratorPanel basePrice={featured.price} />

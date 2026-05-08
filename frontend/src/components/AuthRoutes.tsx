@@ -1,5 +1,7 @@
 import { Result } from "antd";
+import { notification } from "antd";
 import type { ReactNode } from "react";
+import { useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 
 import { useAuthStore } from "../store/authStore";
@@ -36,14 +38,21 @@ export function RoleRoute({ children, roles }: RoleRouteProps) {
   }
 
   if (!roles.includes(user.role)) {
-    return (
-      <Result
-        status="403"
-        title="No access"
-        subTitle="This page requires a different LumaDock role."
-      />
-    );
+    return <ForbiddenResult />;
   }
 
   return children;
+}
+
+function ForbiddenResult() {
+  useEffect(() => {
+    notification.warning({
+      description: "This page requires a different LumaDock role.",
+      title: "Permission denied",
+    });
+  }, []);
+
+  return (
+    <Result status="403" title="No access" subTitle="This page requires a different LumaDock role." />
+  );
 }

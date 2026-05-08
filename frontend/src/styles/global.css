@@ -799,6 +799,19 @@ small,
   padding: 18px;
 }
 
+.error-boundary {
+  display: grid;
+  min-height: 48vh;
+  align-items: center;
+}
+
+.error-boundary.compact {
+  min-height: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
 .chapter-item h2 {
   margin-top: 0;
 }
