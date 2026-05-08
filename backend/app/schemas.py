@@ -45,6 +45,10 @@ class LeadRead(BaseModel):
     created_at: datetime
 
 
+class AdminLeadRead(LeadRead):
+    product_name: str | None
+
+
 class StatsRead(BaseModel):
     products: int
     leads: int

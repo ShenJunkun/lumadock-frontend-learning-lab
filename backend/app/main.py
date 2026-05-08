@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
+from app.admin import router as admin_router
 from app.auth import router as auth_router
 from app.database import SessionLocal, get_session, init_db
 from app.models import Lead, Product
@@ -40,6 +41,7 @@ app.add_middleware(
 )
 
 app.include_router(auth_router)
+app.include_router(admin_router)
 
 
 @app.get("/health")

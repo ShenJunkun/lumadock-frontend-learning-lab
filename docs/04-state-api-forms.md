@@ -44,6 +44,7 @@
 
 - `POST /api/auth/login` 用邮箱和密码换取 JWT。
 - `GET /api/auth/me` 用 `Authorization: Bearer <token>` 获取当前用户。
+- `GET /api/admin/leads` 需要 admin token，用于后台查看预约线索。
 
 默认账号：
 
@@ -53,3 +54,9 @@ viewer@lumadock.local / viewer123
 ```
 
 本项目会在前端把 token 存入 `localStorage`，这是为了直观学习前端认证数据流；生产系统通常要进一步评估 httpOnly cookie、CSRF、防 XSS 和 token 刷新策略。
+
+权限约定：
+
+- `admin` 可以访问后台 leads 列表。
+- `viewer` 可以登录，但访问后台 leads 会得到 403。
+- 未登录访问受保护接口会得到 401。

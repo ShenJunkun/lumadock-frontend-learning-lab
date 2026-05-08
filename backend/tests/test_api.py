@@ -130,3 +130,51 @@ def test_me_requires_token(client: TestClient) -> None:
     response = client.get("/api/auth/me")
 
     assert response.status_code == 401
+
+
+def login_as(client: TestClient, email: str, password: str) -> str:
+    response = client.post("/api/auth/login", json={"email": email, "password": password})
+    assert response.status_code == 200
+    return response.json()["access_token"]
+
+
+def create_demo_lead(client: TestClient) -> None:
+    response = client.post(
+        "/api/leads",
+        json={
+            "product_id": "lumadock-studio",
+            "name": "Katherine Johnson",
+            "email": "katherine@example.com",
+            "company": "Orbital Labs",
+            "role": "Operations",
+            "message": "Please schedule a team walkthrough.",
+            "configuration": {"finish": "pearl"},
+        },
+    )
+    assert response.status_code == 201
+
+
+def test_admin_can_list_leads(client: TestClient) -> None:
+    create_demo_lead(client)
+    token = login_as(client, "admin@lumadock.local", "admin123")
+
+    response = client.get("/api/admin/leads", headers={"Authorization": f"Bearer {token}"})
+
+    assert response.status_code == 200
+    leads = response.json()
+    assert len(leads) == 1
+    assert leads[0]["product_name"] == "LumaDock Studio"
+
+
+def test_viewer_cannot_list_admin_leads(client: TestClient) -> None:
+    token = login_as(client, "viewer@lumadock.local", "viewer123")
+
+    response = client.get("/api/admin/leads", headers={"Authorization": f"Bearer {token}"})
+
+    assert response.status_code == 403
+
+
+def test_admin_leads_requires_token(client: TestClient) -> None:
+    response = client.get("/api/admin/leads")
+
+    assert response.status_code == 401
