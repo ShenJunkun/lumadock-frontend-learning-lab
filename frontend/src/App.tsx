@@ -7,6 +7,7 @@ import { PrivateRoute, RoleRoute } from "./components/AuthRoutes";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { RouteSkeleton } from "./components/SkeletonStates";
 import { RouteMetadataManager } from "./lib/routeMetadata";
+import { RouteTelemetryRecorder } from "./lib/telemetry";
 
 const AdminPage = lazy(() =>
   import("./pages/AdminPage").then((module) => ({ default: module.AdminPage })),
@@ -39,6 +40,7 @@ export function App() {
   return (
     <AppShell>
       <RouteMetadataManager />
+      <RouteTelemetryRecorder />
       <ErrorBoundary resetKey={location.pathname} title="Page unavailable">
         <Suspense fallback={<RouteSkeleton />}>
           <Routes>

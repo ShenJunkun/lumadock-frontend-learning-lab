@@ -17,7 +17,7 @@ export const p4LearningMilestones: P4LearningMilestone[] = [
   {
     id: "telemetry",
     label: "Privacy-safe telemetry",
-    status: "Planned",
+    status: "Completed",
     evidence: "Track route and booking events without sending PII to external services.",
   },
   {

@@ -5,6 +5,7 @@ import { Send } from "lucide-react";
 import { useForm } from "react-hook-form";
 
 import { submitLead } from "../api/leads";
+import { trackEvent } from "../lib/telemetry";
 import { useConfiguratorStore } from "../store/configuratorStore";
 import { leadFormSchema, type LeadFormValues } from "./leadFormSchema";
 
@@ -38,15 +39,19 @@ export function LeadForm({ productId }: LeadFormProps) {
   });
 
   const onSubmit = handleSubmit(async (values) => {
+    const submittedProductId = values.productId || productId;
     try {
       await mutation.mutateAsync({
-        product_id: values.productId || productId,
+        product_id: submittedProductId,
         name: values.name,
         email: values.email,
         company: values.company || undefined,
         role: values.role || undefined,
         message: values.message || undefined,
         configuration: snapshot(),
+      });
+      trackEvent("booking_submit_succeeded", {
+        productId: submittedProductId ?? "unknown",
       });
       void message.success("Request saved locally.");
       reset({
@@ -59,6 +64,9 @@ export function LeadForm({ productId }: LeadFormProps) {
         consent: false,
       });
     } catch {
+      trackEvent("booking_submit_failed", {
+        productId: submittedProductId ?? "unknown",
+      });
       void message.error("Could not reach the local API.");
     }
   });

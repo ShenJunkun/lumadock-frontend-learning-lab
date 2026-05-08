@@ -13,6 +13,6 @@ describe("p4LearningRoadmap", () => {
       label: "SEO / route metadata",
       status: "Completed",
     });
-    expect(getP4LearningMilestone("telemetry")?.status).toBe("Planned");
+    expect(getP4LearningMilestone("telemetry")?.status).toBe("Completed");
   });
 });

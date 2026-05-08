@@ -22,5 +22,6 @@ describe("LearnPage", () => {
     expect(screen.getByText("Consumes shared UI")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Production readiness track" })).toBeInTheDocument();
     expect(screen.getByText("SEO / route metadata")).toBeInTheDocument();
+    expect(screen.getByText("Privacy-safe telemetry")).toBeInTheDocument();
   });
 });
