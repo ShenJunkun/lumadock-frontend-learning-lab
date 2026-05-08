@@ -8,10 +8,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
+from app.auth import router as auth_router
 from app.database import SessionLocal, get_session, init_db
 from app.models import Lead, Product
 from app.schemas import LeadCreate, LeadRead, ProductRead, StatsRead
-from app.seed import seed_products
+from app.seed import seed_products, seed_users
 
 
 @asynccontextmanager
@@ -19,6 +20,7 @@ async def lifespan(app: FastAPI):
     init_db()
     with SessionLocal() as session:
         seed_products(session)
+        seed_users(session)
     yield
 
 
@@ -36,6 +38,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(auth_router)
 
 
 @app.get("/health")

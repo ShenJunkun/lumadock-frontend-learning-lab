@@ -38,3 +38,18 @@
 3. 后端 `LeadCreate` 和数据库模型同步新增字段。
 4. 加 pytest 和 Vitest 测试。
 
+## JWT Demo Auth
+
+后端提供本地学习用认证接口：
+
+- `POST /api/auth/login` 用邮箱和密码换取 JWT。
+- `GET /api/auth/me` 用 `Authorization: Bearer <token>` 获取当前用户。
+
+默认账号：
+
+```text
+admin@lumadock.local / admin123
+viewer@lumadock.local / viewer123
+```
+
+本项目会在前端把 token 存入 `localStorage`，这是为了直观学习前端认证数据流；生产系统通常要进一步评估 httpOnly cookie、CSRF、防 XSS 和 token 刷新策略。

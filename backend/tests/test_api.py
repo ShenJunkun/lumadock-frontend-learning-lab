@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.database import Base, get_session
 from app.main import app
-from app.seed import seed_products
+from app.seed import seed_products, seed_users
 
 
 @pytest.fixture()
@@ -21,6 +21,7 @@ def client(tmp_path) -> Generator[TestClient, None, None]:
 
     with Session(engine) as session:
         seed_products(session)
+        seed_users(session)
 
     def override_get_session():
         session = TestingSessionLocal()
@@ -100,3 +101,32 @@ def test_create_lead_validates_fields(client: TestClient) -> None:
 
     assert response.status_code == 422
 
+
+def test_login_success_and_me(client: TestClient) -> None:
+    login_response = client.post(
+        "/api/auth/login",
+        json={"email": "admin@lumadock.local", "password": "admin123"},
+    )
+
+    assert login_response.status_code == 200
+    token = login_response.json()["access_token"]
+    assert login_response.json()["user"]["role"] == "admin"
+
+    me_response = client.get("/api/auth/me", headers={"Authorization": f"Bearer {token}"})
+    assert me_response.status_code == 200
+    assert me_response.json()["email"] == "admin@lumadock.local"
+
+
+def test_login_rejects_bad_password(client: TestClient) -> None:
+    response = client.post(
+        "/api/auth/login",
+        json={"email": "admin@lumadock.local", "password": "wrong"},
+    )
+
+    assert response.status_code == 401
+
+
+def test_me_requires_token(client: TestClient) -> None:
+    response = client.get("/api/auth/me")
+
+    assert response.status_code == 401

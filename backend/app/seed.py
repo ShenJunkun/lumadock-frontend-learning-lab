@@ -3,7 +3,8 @@ from __future__ import annotations
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from app.models import Product
+from app.auth import hash_password
+from app.models import Product, User
 
 
 PRODUCTS = [
@@ -84,3 +85,34 @@ def seed_products(session: Session) -> None:
     session.add_all(Product(**product) for product in PRODUCTS)
     session.commit()
 
+
+USERS = [
+    {
+        "email": "admin@lumadock.local",
+        "name": "LumaDock Admin",
+        "password": "admin123",
+        "role": "admin",
+    },
+    {
+        "email": "viewer@lumadock.local",
+        "name": "LumaDock Viewer",
+        "password": "viewer123",
+        "role": "viewer",
+    },
+]
+
+
+def seed_users(session: Session) -> None:
+    for user in USERS:
+        existing_user = session.scalar(select(User).where(User.email == user["email"]))
+        if existing_user:
+            continue
+        session.add(
+            User(
+                email=user["email"],
+                name=user["name"],
+                password_hash=hash_password(user["password"]),
+                role=user["role"],
+            )
+        )
+    session.commit()

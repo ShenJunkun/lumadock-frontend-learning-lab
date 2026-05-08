@@ -15,6 +15,14 @@ conda run -n frontend-product-lab uvicorn app.main:app --app-dir backend --reloa
 - `GET /api/products/{id}`
 - `GET /api/stats`
 - `POST /api/leads`
+- `POST /api/auth/login`
+- `GET /api/auth/me`
 
 The SQLite database defaults to `backend/lumadock.db`. Override with `LUMADOCK_DATABASE_URL`.
 
+## Demo Accounts
+
+- `admin@lumadock.local` / `admin123`
+- `viewer@lumadock.local` / `viewer123`
+
+JWT tokens are for local learning only. Set `LUMADOCK_JWT_SECRET` to override the development secret.
