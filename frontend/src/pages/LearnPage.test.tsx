@@ -28,5 +28,6 @@ describe("LearnPage", () => {
     expect(screen.getByRole("heading", { name: "Frontend mastery track" })).toBeInTheDocument();
     expect(screen.getByText("PWA / offline shell")).toBeInTheDocument();
     expect(screen.getByText("Web Vitals / budgets")).toBeInTheDocument();
+    expect(screen.getByText("Security and privacy")).toBeInTheDocument();
   });
 });

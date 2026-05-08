@@ -16,6 +16,6 @@ describe("p5LearningRoadmap", () => {
       status: "Completed",
     });
     expect(getP5LearningMilestone("performance-budgets")?.status).toBe("Completed");
-    expect(getP5LearningMilestone("security-privacy")?.status).toBe("Planned");
+    expect(getP5LearningMilestone("security-privacy")?.status).toBe("Completed");
   });
 });

@@ -1,3 +1,5 @@
+/* global caches, fetch, self, URL */
+
 const CACHE_NAME = "lumadock-shell-v1";
 const SHELL_ASSETS = [
   "/",

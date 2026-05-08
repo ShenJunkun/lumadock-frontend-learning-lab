@@ -2,6 +2,8 @@ import { Button, Result } from "antd";
 import type { ErrorInfo, ReactNode } from "react";
 import { Component } from "react";
 
+import { reportClientError } from "../lib/errorReporting";
+
 type ErrorBoundaryProps = {
   children: ReactNode;
   compact?: boolean;
@@ -23,6 +25,10 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    reportClientError(error, {
+      componentStack: errorInfo.componentStack ?? null,
+      resetKey: this.props.resetKey ?? null,
+    });
     console.error("LumaDock render failure", error, errorInfo);
   }
 

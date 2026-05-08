@@ -29,7 +29,7 @@ export const p5LearningMilestones: P5LearningMilestone[] = [
   {
     id: "security-privacy",
     label: "Security and privacy",
-    status: "Planned",
+    status: "Completed",
     evidence: "Document CSP and redact sensitive data from local error reporting.",
   },
   {
