@@ -37,6 +37,27 @@ export function LearnPage() {
         <p>每个章节都对应仓库中的源码、测试或文档。</p>
       </div>
 
+      <div className="mb-6 grid gap-3 rounded-ui border border-line bg-surface p-4 shadow-soft md:grid-cols-3">
+        <div>
+          <span className="eyebrow">Tailwind</span>
+          <p className="mt-1 text-sm text-muted">
+            Utility classes handle local spacing and responsive layout.
+          </p>
+        </div>
+        <div>
+          <span className="eyebrow">Global CSS</span>
+          <p className="mt-1 text-sm text-muted">
+            Design variables and product visuals stay centralized.
+          </p>
+        </div>
+        <div>
+          <span className="eyebrow">Breakpoints</span>
+          <p className="mt-1 text-sm text-muted">
+            Use xs, sm, md, lg, xl, and 2xl as shared responsive steps.
+          </p>
+        </div>
+      </div>
+
       <div className="chapter-list">
         {chapters.map((chapter) => {
           const Icon = chapter.icon;
