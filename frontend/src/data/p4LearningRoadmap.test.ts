@@ -14,5 +14,6 @@ describe("p4LearningRoadmap", () => {
       status: "Completed",
     });
     expect(getP4LearningMilestone("telemetry")?.status).toBe("Completed");
+    expect(getP4LearningMilestone("data-prefetch")?.status).toBe("Completed");
   });
 });

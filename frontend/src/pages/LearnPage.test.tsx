@@ -23,5 +23,6 @@ describe("LearnPage", () => {
     expect(screen.getByRole("heading", { name: "Production readiness track" })).toBeInTheDocument();
     expect(screen.getByText("SEO / route metadata")).toBeInTheDocument();
     expect(screen.getByText("Privacy-safe telemetry")).toBeInTheDocument();
+    expect(screen.getByText("Data prefetch")).toBeInTheDocument();
   });
 });

@@ -23,7 +23,7 @@ export const p4LearningMilestones: P4LearningMilestone[] = [
   {
     id: "data-prefetch",
     label: "Data prefetch",
-    status: "Planned",
+    status: "Completed",
     evidence: "Prefetch product details when a user signals intent from the catalog.",
   },
   {

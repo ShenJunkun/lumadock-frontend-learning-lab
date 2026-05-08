@@ -6,15 +6,20 @@ import { ResponsiveProductImage } from "./ResponsiveProductImage";
 import type { Product } from "../types/product";
 
 type ProductCardProps = {
+  onIntent?: (productId: string) => void;
   product: Product;
 };
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ onIntent, product }: ProductCardProps) {
+  const handleIntent = () => onIntent?.(product.id);
+
   return (
     <Link
       className="product-card"
       to={`/products/${product.id}`}
       style={{ "--accent": product.accent } as CSSProperties}
+      onFocus={handleIntent}
+      onMouseEnter={handleIntent}
     >
       <div className="product-card-media">
         <ResponsiveProductImage

@@ -1,7 +1,8 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import { useProducts } from "../api/products";
+import { prefetchProductDetail, useProducts } from "../api/products";
 import { ProductCard } from "../components/ProductCard";
 import { ProductGridSkeleton } from "../components/SkeletonStates";
 import { ErrorState, LoadingState, EmptyState } from "../components/StateBlocks";
@@ -9,6 +10,7 @@ import { fallbackProducts } from "../data/fallbackProducts";
 
 export function CatalogPage() {
   const [query, setQuery] = useState("");
+  const queryClient = useQueryClient();
   const productsQuery = useProducts();
   const products = productsQuery.data?.length ? productsQuery.data : fallbackProducts;
   const filteredProducts = useMemo(() => {
@@ -22,6 +24,10 @@ export function CatalogPage() {
       ),
     );
   }, [products, query]);
+
+  const handleProductIntent = (productId: string) => {
+    void prefetchProductDetail(queryClient, productId);
+  };
 
   return (
     <section className="page-section">
@@ -56,7 +62,7 @@ export function CatalogPage() {
       ) : filteredProducts.length ? (
         <div className="product-grid catalog-grid">
           {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} onIntent={handleProductIntent} />
           ))}
         </div>
       ) : (
