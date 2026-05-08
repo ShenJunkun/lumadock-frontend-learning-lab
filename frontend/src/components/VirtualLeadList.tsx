@@ -9,6 +9,8 @@ type VirtualLeadListProps = {
 
 export function VirtualLeadList({ leads }: VirtualLeadListProps) {
   const parentRef = useRef<HTMLDivElement | null>(null);
+  // TanStack Virtual intentionally returns imperative helpers that React Compiler should skip.
+  // eslint-disable-next-line react-hooks/incompatible-library
   const virtualizer = useVirtualizer({
     count: leads.length,
     estimateSize: () => 82,

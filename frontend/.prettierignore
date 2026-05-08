@@ -1,7 +1,7 @@
 dist
 coverage
 node_modules
+public/mockServiceWorker.js
 playwright-report
 test-results
 *.log
-

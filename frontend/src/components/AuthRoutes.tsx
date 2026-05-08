@@ -53,6 +53,10 @@ function ForbiddenResult() {
   }, []);
 
   return (
-    <Result status="403" title="No access" subTitle="This page requires a different LumaDock role." />
+    <Result
+      status="403"
+      title="No access"
+      subTitle="This page requires a different LumaDock role."
+    />
   );
 }
