@@ -20,5 +20,7 @@ describe("LearnPage", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("packages/ui")).toBeInTheDocument();
     expect(screen.getByText("Consumes shared UI")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Production readiness track" })).toBeInTheDocument();
+    expect(screen.getByText("SEO / route metadata")).toBeInTheDocument();
   });
 });
