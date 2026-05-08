@@ -9,25 +9,38 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import { useAuthStore } from "../store/authStore";
+import {
+  languageOptions,
+  themeModeOptions,
+  usePreferencesStore,
+  type LanguageId,
+  type ThemeMode,
+} from "../store/preferencesStore";
 
 type AppShellProps = {
   children: ReactNode;
 };
 
 const navItems = [
-  { to: "/", label: "首页", icon: Home, end: true },
-  { to: "/products", label: "产品目录", icon: PackageSearch },
-  { to: "/book", label: "预约", icon: CalendarDays },
-  { to: "/learn", label: "学习章节", icon: GraduationCap },
+  { to: "/", labelKey: "shell.home", icon: Home, end: true },
+  { to: "/products", labelKey: "shell.products", icon: PackageSearch },
+  { to: "/book", labelKey: "shell.book", icon: CalendarDays },
+  { to: "/learn", labelKey: "shell.learn", icon: GraduationCap },
 ];
 
 export function AppShell({ children }: AppShellProps) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const logout = useAuthStore((state) => state.logout);
+  const language = usePreferencesStore((state) => state.language);
+  const setLanguage = usePreferencesStore((state) => state.setLanguage);
+  const themeMode = usePreferencesStore((state) => state.themeMode);
+  const setThemeMode = usePreferencesStore((state) => state.setThemeMode);
 
   const handleLogout = () => {
     logout();
@@ -54,7 +67,7 @@ export function AppShell({ children }: AppShellProps) {
                 className={({ isActive }) => `nav-link${isActive ? " is-active" : ""}`}
               >
                 <Icon size={17} aria-hidden="true" />
-                <span>{item.label}</span>
+                <span>{t(item.labelKey)}</span>
               </NavLink>
             );
           })}
@@ -64,7 +77,7 @@ export function AppShell({ children }: AppShellProps) {
               className={({ isActive }) => `nav-link${isActive ? " is-active" : ""}`}
             >
               <ShieldCheck size={17} aria-hidden="true" />
-              <span>后台</span>
+              <span>{t("shell.admin")}</span>
             </NavLink>
           )}
           {!isAuthenticated ? (
@@ -73,20 +86,52 @@ export function AppShell({ children }: AppShellProps) {
               className={({ isActive }) => `nav-link${isActive ? " is-active" : ""}`}
             >
               <LogIn size={17} aria-hidden="true" />
-              <span>登录</span>
+              <span>{t("shell.login")}</span>
             </NavLink>
           ) : (
             <button className="nav-link nav-button" type="button" onClick={handleLogout}>
               <LogOut size={17} aria-hidden="true" />
-              <span>退出</span>
+              <span>{t("shell.logout")}</span>
             </button>
           )}
+          <div className="shell-controls" aria-label="Preferences">
+            <label>
+              <span className="visually-hidden">{t("shell.language")}</span>
+              <select
+                className="preference-select"
+                aria-label={t("shell.language")}
+                value={language}
+                onChange={(event) => setLanguage(event.target.value as LanguageId)}
+              >
+                {languageOptions.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              <span className="visually-hidden">{t("shell.theme")}</span>
+              <select
+                className="preference-select"
+                aria-label={t("shell.theme")}
+                value={themeMode}
+                onChange={(event) => setThemeMode(event.target.value as ThemeMode)}
+              >
+                {themeModeOptions.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {t(option.labelKey)}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
         </nav>
       </header>
       <main>{children}</main>
       <footer className="site-footer">
-        <span>Independent frontend learning lab</span>
-        <span>React + TypeScript + FastAPI</span>
+        <span>{t("shell.footerLab")}</span>
+        <span>{t("shell.footerStack")}</span>
       </footer>
     </div>
   );
