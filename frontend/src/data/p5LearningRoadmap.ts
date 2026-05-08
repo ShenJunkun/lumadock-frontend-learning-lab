@@ -23,7 +23,7 @@ export const p5LearningMilestones: P5LearningMilestone[] = [
   {
     id: "performance-budgets",
     label: "Web Vitals / budgets",
-    status: "Planned",
+    status: "Completed",
     evidence: "Define frontend budgets for runtime metrics and bundle growth.",
   },
   {

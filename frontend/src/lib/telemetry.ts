@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 export type TelemetryEventName =
   | "booking_submit_failed"
   | "booking_submit_succeeded"
+  | "performance_metric_recorded"
   | "route_view";
 
 export type TelemetryPayload = Record<string, boolean | number | string | null>;

@@ -20,3 +20,14 @@ PWA 的第一步不是缓存一切，而是建立明确的离线边界：
 - 前端只在生产环境尝试注册 service worker，避免开发和 E2E 被旧缓存影响。
 
 后续如果需要真实离线业务能力，再补 Workbox、缓存版本清理、API stale fallback 和安装提示。
+
+## Web Vitals / 性能预算
+
+P5 增加统一的性能预算模型，用来学习如何把“感觉有点慢”变成可讨论、可测试的阈值：
+
+- LCP：`2500ms` 以内为 good，`4000ms` 以上为 poor。
+- INP：`200ms` 以内为 good，`500ms` 以上为 poor。
+- CLS：`0.1` 以内为 good，`0.25` 以上为 poor。
+- JS bundle：`500KB` 以内为 good，`900KB` 以上为 poor。
+
+当前实现不接外部 RUM 平台；`recordPerformanceMetric` 会复用本地 telemetry，把 metric、rating、unit 和 value 记录为脱敏事件。
