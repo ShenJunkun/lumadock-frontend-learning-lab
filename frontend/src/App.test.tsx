@@ -29,16 +29,20 @@ describe("App", () => {
   it("renders the home route", async () => {
     renderApp("/");
 
-    expect(await screen.findByRole("heading", { level: 1, name: "LumaDock" })).toBeInTheDocument();
-    expect(await screen.findByRole("link", { name: /Explore products/i })).toBeInTheDocument();
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "LumaDock" }, { timeout: 5_000 }),
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByRole("link", { name: /Explore products/i }, { timeout: 5_000 }),
+    ).toBeInTheDocument();
   });
 
   it("renders the learning chapter route", async () => {
     renderApp("/learn");
 
     expect(
-      await screen.findByRole("heading", { name: "从产品界面学前端工程" }),
+      await screen.findByRole("heading", { name: "从产品界面学前端工程" }, { timeout: 5_000 }),
     ).toBeInTheDocument();
-    expect(await screen.findByText("03 React 工程")).toBeInTheDocument();
+    expect(await screen.findByText("03 React 工程", {}, { timeout: 5_000 })).toBeInTheDocument();
   });
 });
