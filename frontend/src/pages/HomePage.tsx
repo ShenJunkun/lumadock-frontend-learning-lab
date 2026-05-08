@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useProducts, useStats } from "../api/products";
 import { ConfiguratorPanel } from "../components/ConfiguratorPanel";
 import { ProductCard } from "../components/ProductCard";
+import { ResponsiveProductImage } from "../components/ResponsiveProductImage";
 import { ProductSceneBoundary } from "../components/ProductSceneBoundary";
 import { ProductScene } from "../components/ProductScene";
 import { ScrollReveal } from "../components/ScrollReveal";
@@ -71,7 +72,12 @@ export function HomePage() {
           </dl>
         </div>
         <div className="hero-media" aria-label="LumaDock product render">
-          <img src="/assets/lumadock-hero.png" alt="LumaDock desktop dock product render" />
+          <ResponsiveProductImage
+            src="/assets/lumadock-hero.png"
+            alt="LumaDock desktop dock product render"
+            loading="eager"
+            sizes="(max-width: 980px) 100vw, 58vw"
+          />
         </div>
       </section>
 
