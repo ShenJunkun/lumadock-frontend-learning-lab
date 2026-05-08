@@ -14,6 +14,8 @@ npm.cmd --prefix frontend run build
 
 - 路由渲染。
 - API client 成功和错误分支。
+- Zod API contract schema。
+- ErrorBoundary、Skeleton、Route focus、偏好设置。
 - 表单 zod 校验。
 - Zustand 配置器状态。
 
@@ -32,6 +34,8 @@ conda run -n frontend-product-lab pytest backend
 - lead 创建
 - 字段校验
 - SQLite 持久化统计
+- OpenAPI contract shape
+- `CORS_ORIGINS` 环境变量解析
 
 ## E2E
 
@@ -39,9 +43,17 @@ conda run -n frontend-product-lab pytest backend
 npm.cmd --prefix frontend run test:e2e
 ```
 
-Playwright 覆盖首页、目录、详情和预约提交流程。测试会 mock lead 提交接口，因此不依赖真实后端。
+Playwright 覆盖首页、目录、详情、预约提交、登录权限和基础 A11y。E2E 通过 `VITE_ENABLE_MOCKS=true` 启用 MSW，因此不依赖真实后端。
 `test:e2e` 脚本会自动启动并关闭 Vite dev server。
 E2E 也覆盖访客跳登录、admin 登录进入后台、viewer 被角色权限拦截。
+
+## Bundle 分析
+
+```powershell
+npm.cmd --prefix frontend run build:analyze
+```
+
+该命令会在 `frontend/dist/bundle-report.html` 生成 `rollup-plugin-visualizer` 报告，用来观察 Antd、Three、Framer Motion、Recharts 等依赖体积。
 
 ## git 提交流程
 
@@ -73,3 +85,11 @@ npm.cmd --prefix frontend run lint:fix
 npm.cmd --prefix frontend run format:check
 npm.cmd --prefix frontend run format
 ```
+
+提交前可安装 git hook：
+
+```powershell
+npm.cmd run hooks:install
+```
+
+`pre-commit` 会通过 `lint-staged.config.mjs` 对暂存的前端代码和文档执行 ESLint/Prettier。

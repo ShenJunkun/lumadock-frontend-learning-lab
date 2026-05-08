@@ -32,6 +32,3 @@ backend/lumadock.db
 Thumbs.db
 .idea/
 .vscode/
-
-# Personal notes
-docs/99-missing-modules.md
