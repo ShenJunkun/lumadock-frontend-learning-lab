@@ -60,3 +60,13 @@ export function AdminTableSkeleton() {
     </div>
   );
 }
+
+export function RouteSkeleton() {
+  return (
+    <section className="page-section" role="status" aria-label="Loading route">
+      <div className="route-skeleton">
+        <Skeleton active paragraph={{ rows: 5 }} title={{ width: "42%" }} />
+      </div>
+    </section>
+  );
+}
