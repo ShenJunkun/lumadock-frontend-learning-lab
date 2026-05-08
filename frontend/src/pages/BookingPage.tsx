@@ -5,6 +5,7 @@ import { useProducts } from "../api/products";
 import { LeadForm } from "../components/LeadForm";
 import { ProductSceneBoundary } from "../components/ProductSceneBoundary";
 import { ProductScene } from "../components/ProductScene";
+import { BookingSkeleton } from "../components/SkeletonStates";
 import { ErrorState } from "../components/StateBlocks";
 import { fallbackProducts } from "../data/fallbackProducts";
 
@@ -18,6 +19,10 @@ export function BookingPage() {
     () => products.find((product) => product.id === selectedId) ?? products[0],
     [products, selectedId],
   );
+
+  if (productsQuery.isLoading && !productsQuery.data) {
+    return <BookingSkeleton />;
+  }
 
   return (
     <section className="page-section booking-page">

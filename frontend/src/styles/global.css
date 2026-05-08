@@ -457,6 +457,34 @@ main {
     border-color 180ms ease;
 }
 
+.skeleton-card:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.skeleton-media {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.skeleton-state .ant-skeleton {
+  grid-column: 2;
+}
+
+.skeleton-copy,
+.admin-skeleton {
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.skeleton-stage {
+  width: 100% !important;
+  min-height: 420px;
+  border-radius: 8px;
+}
+
 .product-card:hover {
   transform: translateY(-4px);
   border-color: var(--accent);

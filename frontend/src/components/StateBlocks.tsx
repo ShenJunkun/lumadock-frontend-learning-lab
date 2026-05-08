@@ -1,3 +1,4 @@
+import { Skeleton } from "antd";
 import { AlertCircle, Loader2, SearchX } from "lucide-react";
 
 type StateBlockProps = {
@@ -10,10 +11,11 @@ export function LoadingState({
   message = "Fetching fresh data.",
 }: Partial<StateBlockProps>) {
   return (
-    <div className="state-block" role="status">
+    <div className="state-block skeleton-state" role="status">
       <Loader2 className="state-icon spin" size={24} aria-hidden="true" />
       <strong>{title}</strong>
       <span>{message}</span>
+      <Skeleton active paragraph={{ rows: 1 }} title={false} />
     </div>
   );
 }

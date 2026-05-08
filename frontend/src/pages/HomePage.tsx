@@ -7,6 +7,7 @@ import { ProductCard } from "../components/ProductCard";
 import { ProductSceneBoundary } from "../components/ProductSceneBoundary";
 import { ProductScene } from "../components/ProductScene";
 import { ScrollReveal } from "../components/ScrollReveal";
+import { ProductGridSkeleton } from "../components/SkeletonStates";
 import { ErrorState, LoadingState } from "../components/StateBlocks";
 import { fallbackProducts } from "../data/fallbackProducts";
 
@@ -132,11 +133,15 @@ export function HomePage() {
             <ArrowRight size={16} aria-hidden="true" />
           </Link>
         </div>
-        <div className="product-grid">
-          {products.slice(0, 3).map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {productsQuery.isLoading && !productsQuery.data ? (
+          <ProductGridSkeleton label="Loading featured products" />
+        ) : (
+          <div className="product-grid">
+            {products.slice(0, 3).map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
       </section>
     </>
   );

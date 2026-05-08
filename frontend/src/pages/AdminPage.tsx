@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useMemo, useState } from "react";
 
 import { getAdminLeads } from "../api/admin";
+import { AdminTableSkeleton } from "../components/SkeletonStates";
 import type { AdminLead } from "../types/auth";
 
 export function AdminPage() {
@@ -84,15 +85,18 @@ export function AdminPage() {
           <Tag color="cyan">admin only</Tag>
         </div>
 
-        <Table<AdminLead>
-          columns={columns}
-          dataSource={leadsQuery.data ?? []}
-          loading={leadsQuery.isLoading}
-          locale={{ emptyText: "No leads yet" }}
-          pagination={{ pageSize: 5 }}
-          rowKey="id"
-          scroll={{ x: true }}
-        />
+        {leadsQuery.isLoading ? (
+          <AdminTableSkeleton />
+        ) : (
+          <Table<AdminLead>
+            columns={columns}
+            dataSource={leadsQuery.data ?? []}
+            locale={{ emptyText: "No leads yet" }}
+            pagination={{ pageSize: 5 }}
+            rowKey="id"
+            scroll={{ x: true }}
+          />
+        )}
       </div>
 
       <Modal

@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 
 import { useProducts } from "../api/products";
 import { ProductCard } from "../components/ProductCard";
+import { ProductGridSkeleton } from "../components/SkeletonStates";
 import { ErrorState, LoadingState, EmptyState } from "../components/StateBlocks";
 import { fallbackProducts } from "../data/fallbackProducts";
 
@@ -40,7 +41,7 @@ export function CatalogPage() {
         />
       </label>
 
-      {productsQuery.isLoading && (
+      {productsQuery.isLoading && !productsQuery.data && (
         <LoadingState title="Loading catalog" message="Fetching products from FastAPI." />
       )}
       {productsQuery.isError && (
@@ -50,7 +51,9 @@ export function CatalogPage() {
         />
       )}
 
-      {filteredProducts.length ? (
+      {productsQuery.isLoading && !productsQuery.data ? (
+        <ProductGridSkeleton count={6} label="Loading catalog products" />
+      ) : filteredProducts.length ? (
         <div className="product-grid catalog-grid">
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />

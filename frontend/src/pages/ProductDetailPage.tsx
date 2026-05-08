@@ -5,7 +5,8 @@ import { useProduct } from "../api/products";
 import { ConfiguratorPanel } from "../components/ConfiguratorPanel";
 import { ProductSceneBoundary } from "../components/ProductSceneBoundary";
 import { ProductScene } from "../components/ProductScene";
-import { ErrorState, LoadingState } from "../components/StateBlocks";
+import { ProductDetailSkeleton } from "../components/SkeletonStates";
+import { ErrorState } from "../components/StateBlocks";
 import { fallbackProducts } from "../data/fallbackProducts";
 
 export function ProductDetailPage() {
@@ -15,11 +16,7 @@ export function ProductDetailPage() {
   const product = productQuery.data ?? fallbackProduct;
 
   if (productQuery.isLoading && !product) {
-    return (
-      <section className="page-section">
-        <LoadingState title="Loading product" message="Fetching the detail route." />
-      </section>
-    );
+    return <ProductDetailSkeleton />;
   }
 
   if (!product) {
