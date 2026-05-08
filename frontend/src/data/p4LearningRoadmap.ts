@@ -29,7 +29,7 @@ export const p4LearningMilestones: P4LearningMilestone[] = [
   {
     id: "form-drafts",
     label: "Booking form drafts",
-    status: "Planned",
+    status: "Completed",
     evidence: "Keep current-tab form progress resilient to refreshes and accidental navigation.",
   },
 ];

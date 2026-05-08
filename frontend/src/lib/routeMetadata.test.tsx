@@ -1,11 +1,7 @@
 import { render, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 
-import {
-  applyRouteMetadata,
-  getRouteMetadata,
-  RouteMetadataManager,
-} from "./routeMetadata";
+import { applyRouteMetadata, getRouteMetadata, RouteMetadataManager } from "./routeMetadata";
 
 function getMetaDescription() {
   return document.querySelector('meta[name="description"]')?.getAttribute("content");

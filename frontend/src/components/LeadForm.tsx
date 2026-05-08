@@ -2,9 +2,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { message } from "antd";
 import { Send } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+import { useForm, useWatch } from "react-hook-form";
 
 import { submitLead } from "../api/leads";
+import {
+  clearBookingDraft,
+  getLeadFormDefaultValues,
+  writeBookingDraft,
+} from "../lib/bookingDrafts";
 import { trackEvent } from "../lib/telemetry";
 import { useConfiguratorStore } from "../store/configuratorStore";
 import { leadFormSchema, type LeadFormValues } from "./leadFormSchema";
@@ -20,23 +26,25 @@ export function LeadForm({ productId }: LeadFormProps) {
   });
 
   const {
+    control,
     formState: { errors, isSubmitting },
     handleSubmit,
     register,
     reset,
   } = useForm<LeadFormValues>({
-    defaultValues: {
-      productId,
-      name: "",
-      email: "",
-      company: "",
-      role: "",
-      message: "",
-      consent: false,
-    },
+    defaultValues: getLeadFormDefaultValues(productId),
     resolver: zodResolver(leadFormSchema),
     shouldFocusError: true,
   });
+  const draftValues = useWatch({ control });
+
+  useEffect(() => {
+    reset(getLeadFormDefaultValues(productId));
+  }, [productId, reset]);
+
+  useEffect(() => {
+    writeBookingDraft(productId, draftValues);
+  }, [draftValues, productId]);
 
   const onSubmit = handleSubmit(async (values) => {
     const submittedProductId = values.productId || productId;
@@ -53,6 +61,7 @@ export function LeadForm({ productId }: LeadFormProps) {
       trackEvent("booking_submit_succeeded", {
         productId: submittedProductId ?? "unknown",
       });
+      clearBookingDraft(submittedProductId);
       void message.success("Request saved locally.");
       reset({
         productId,

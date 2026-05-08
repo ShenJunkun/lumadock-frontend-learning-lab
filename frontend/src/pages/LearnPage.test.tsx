@@ -24,5 +24,6 @@ describe("LearnPage", () => {
     expect(screen.getByText("SEO / route metadata")).toBeInTheDocument();
     expect(screen.getByText("Privacy-safe telemetry")).toBeInTheDocument();
     expect(screen.getByText("Data prefetch")).toBeInTheDocument();
+    expect(screen.getByText("Booking form drafts")).toBeInTheDocument();
   });
 });
