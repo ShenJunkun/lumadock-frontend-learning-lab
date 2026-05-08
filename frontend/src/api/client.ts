@@ -1,5 +1,12 @@
-export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") ?? "http://127.0.0.1:8001";
+function readApiBaseUrl() {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
+  if (!apiBaseUrl) {
+    throw new Error("VITE_API_BASE_URL is required. Copy frontend/.env.example first.");
+  }
+  return apiBaseUrl.replace(/\/$/, "");
+}
+
+export const API_BASE_URL = readApiBaseUrl();
 
 let authTokenProvider: () => string | null = () => null;
 
