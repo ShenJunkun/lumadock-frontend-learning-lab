@@ -1,0 +1,65 @@
+name: Verify
+
+on:
+  push:
+    branches: ["master", "main"]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        run: npm ci --prefix frontend
+
+      - name: Lint frontend
+        run: npm --prefix frontend run lint
+
+      - name: Check formatting
+        run: npm --prefix frontend run format:check
+
+      - name: Typecheck frontend
+        run: npm --prefix frontend run typecheck
+
+      - name: Test frontend
+        run: npm --prefix frontend run test
+
+      - name: Build frontend
+        run: npm --prefix frontend run build
+
+      - name: Analyze frontend bundle
+        run: npm --prefix frontend run build:analyze
+
+      - name: Install Playwright browsers
+        run: npm --prefix frontend exec playwright install --with-deps chromium
+
+      - name: Test frontend e2e
+        run: npm --prefix frontend run test:e2e
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install backend dependencies
+        run: python -m pip install -r backend/requirements.txt
+
+      - name: Test backend
+        run: pytest backend
+
+      - name: Build backend Docker image
+        if: ${{ hashFiles('backend/Dockerfile') != '' }}
+        run: docker build -t lumadock-api ./backend
