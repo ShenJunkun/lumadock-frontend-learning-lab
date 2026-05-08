@@ -1,8 +1,4 @@
-export type CssStrategyId =
-  | "antd-tokens"
-  | "emotion"
-  | "styled-components"
-  | "tailwind-global";
+export type CssStrategyId = "antd-tokens" | "emotion" | "styled-components" | "tailwind-global";
 
 export type CssStrategy = {
   id: CssStrategyId;
@@ -12,11 +8,7 @@ export type CssStrategy = {
   currentProjectPolicy: "default" | "supporting" | "study-only";
 };
 
-export type PackageBoundaryId =
-  | "apps-api"
-  | "apps-web"
-  | "packages-api-client"
-  | "packages-ui";
+export type PackageBoundaryId = "apps-api" | "apps-web" | "packages-api-client" | "packages-ui";
 
 export type PackageBoundary = {
   id: PackageBoundaryId;
@@ -25,6 +17,25 @@ export type PackageBoundary = {
   futureLocation: string;
   responsibility: string;
   canDependOn: PackageBoundaryId[];
+};
+
+export type MicrofrontendStudyOption = {
+  id: "module-federation" | "single-spa";
+  label: string;
+  bestFor: string;
+};
+
+export type MicrofrontendDecision = {
+  shouldAdoptNow: boolean;
+  currentReason: string;
+  adoptWhen: string[];
+  studyOptions: MicrofrontendStudyOption[];
+};
+
+export type P3LearningMilestone = {
+  label: string;
+  status: "Completed";
+  evidence: string;
 };
 
 export const cssStrategies: CssStrategy[] = [
@@ -59,6 +70,29 @@ export const cssStrategies: CssStrategy[] = [
 ];
 
 export const architectureMode = "teaching-prototype";
+
+export const p3LearningMilestones: P3LearningMilestone[] = [
+  {
+    label: "CSS-in-JS comparison",
+    status: "Completed",
+    evidence: "Strategy matrix and docs compare runtime CSS-in-JS with current styling.",
+  },
+  {
+    label: "Monorepo boundaries",
+    status: "Completed",
+    evidence: "Package boundary data records future app and package responsibilities.",
+  },
+  {
+    label: "Shared UI package",
+    status: "Completed",
+    evidence: "@lumadock/ui is imported by the learning page through a local alias.",
+  },
+  {
+    label: "Microfrontend decision",
+    status: "Completed",
+    evidence: "Tradeoffs are documented without adding runtime orchestration.",
+  },
+];
 
 export const packageBoundaries: PackageBoundary[] = [
   {
@@ -95,6 +129,29 @@ export const packageBoundaries: PackageBoundary[] = [
   },
 ];
 
+export const microfrontendDecision: MicrofrontendDecision = {
+  shouldAdoptNow: false,
+  currentReason:
+    "LumaDock is one small product app with shared routing, auth, design tokens, and release cadence.",
+  adoptWhen: [
+    "Different teams need independent deployments.",
+    "Product areas can be owned and tested as separate runtime applications.",
+    "Shared contracts, observability, and fallback rules are mature enough.",
+  ],
+  studyOptions: [
+    {
+      id: "module-federation",
+      label: "Module Federation",
+      bestFor: "Vite/Webpack-style runtime composition between independently deployed apps.",
+    },
+    {
+      id: "single-spa",
+      label: "single-spa",
+      bestFor: "Framework-agnostic app orchestration across multiple frontend stacks.",
+    },
+  ],
+};
+
 export function getDefaultCssStrategy() {
   return cssStrategies.find((strategy) => strategy.currentProjectPolicy === "default");
 }
@@ -109,4 +166,8 @@ export function isFullMonorepoMigrationPlannedNow() {
 
 export function getPackageBoundary(id: PackageBoundaryId) {
   return packageBoundaries.find((boundary) => boundary.id === id);
+}
+
+export function shouldAdoptMicrofrontendsNow() {
+  return microfrontendDecision.shouldAdoptNow;
 }

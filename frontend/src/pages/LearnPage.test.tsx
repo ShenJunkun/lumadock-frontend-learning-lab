@@ -11,6 +11,10 @@ describe("LearnPage", () => {
   it("renders the shared UI package prototype from @lumadock/ui", () => {
     render(<LearnPage />);
 
+    expect(screen.getByRole("heading", { name: "Architecture track" })).toBeInTheDocument();
+    expect(screen.getByText("CSS-in-JS comparison")).toBeInTheDocument();
+    expect(screen.getByText("Monorepo boundaries")).toBeInTheDocument();
+    expect(screen.getByText("Microfrontend decision")).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Shared UI package prototype" }),
     ).toBeInTheDocument();

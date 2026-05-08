@@ -2,6 +2,7 @@ import { defaultArchitectureItems, LearningArchitecturePanel } from "@lumadock/u
 import { BookOpenCheck, Code2, GitBranch, Rocket, Sparkles } from "lucide-react";
 
 import { AntdWorkbenchPreview } from "../components/AntdWorkbenchPreview";
+import { p3LearningMilestones } from "../data/p3Architecture";
 
 const chapters = [
   {
@@ -77,6 +78,27 @@ export function LearnPage() {
           );
         })}
       </div>
+
+      <section className="mt-8">
+        <div className="section-heading">
+          <span className="eyebrow">P3 architecture</span>
+          <h2>Architecture track</h2>
+          <p>CSS-in-JS、monorepo 边界、shared UI 和微前端取舍都有文档和测试记录。</p>
+        </div>
+
+        <div className="grid gap-3 md:grid-cols-4">
+          {p3LearningMilestones.map((milestone) => (
+            <article
+              className="rounded-ui border border-line bg-surface p-4 shadow-soft"
+              key={milestone.label}
+            >
+              <span className="eyebrow">{milestone.status}</span>
+              <h3 className="mb-2 mt-3 text-lg font-extrabold">{milestone.label}</h3>
+              <p className="m-0 text-sm text-muted">{milestone.evidence}</p>
+            </article>
+          ))}
+        </div>
+      </section>
 
       <LearningArchitecturePanel
         eyebrow="P3 architecture"
