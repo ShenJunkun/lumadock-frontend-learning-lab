@@ -5,7 +5,9 @@ import { useEffect } from "react";
 import { useMemo, useState } from "react";
 
 import { getAdminLeads } from "../api/admin";
+import { AdminInsights } from "../components/AdminInsights";
 import { AdminTableSkeleton } from "../components/SkeletonStates";
+import { VirtualLeadList } from "../components/VirtualLeadList";
 import type { AdminLead } from "../types/auth";
 
 export function AdminPage() {
@@ -88,14 +90,21 @@ export function AdminPage() {
         {leadsQuery.isLoading ? (
           <AdminTableSkeleton />
         ) : (
-          <Table<AdminLead>
-            columns={columns}
-            dataSource={leadsQuery.data ?? []}
-            locale={{ emptyText: "No leads yet" }}
-            pagination={{ pageSize: 5 }}
-            rowKey="id"
-            scroll={{ x: true }}
-          />
+          <>
+            <AdminInsights leads={leadsQuery.data ?? []} />
+            <section className="activity-panel" aria-labelledby="lead-activity-title">
+              <h3 id="lead-activity-title">Lead activity</h3>
+              <VirtualLeadList leads={leadsQuery.data ?? []} />
+            </section>
+            <Table<AdminLead>
+              columns={columns}
+              dataSource={leadsQuery.data ?? []}
+              locale={{ emptyText: "No leads yet" }}
+              pagination={{ pageSize: 5 }}
+              rowKey="id"
+              scroll={{ x: true }}
+            />
+          </>
         )}
       </div>
 

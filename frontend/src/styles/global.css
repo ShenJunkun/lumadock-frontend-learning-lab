@@ -851,6 +851,77 @@ small,
   margin-top: 0;
 }
 
+.insight-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.insight-panel,
+.activity-panel,
+.insight-empty {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.insight-panel,
+.activity-panel {
+  padding: 16px;
+}
+
+.insight-panel h3,
+.activity-panel h3 {
+  margin: 6px 0 14px;
+  font-size: 1.05rem;
+}
+
+.insight-empty {
+  display: grid;
+  min-height: 180px;
+  margin-bottom: 18px;
+  place-items: center;
+}
+
+.activity-panel {
+  margin-bottom: 18px;
+}
+
+.virtual-list {
+  overflow: auto;
+  height: 260px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.virtual-list-inner {
+  position: relative;
+}
+
+.virtual-lead-row {
+  position: absolute;
+  left: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, auto);
+  gap: 12px;
+  width: 100%;
+  min-height: 74px;
+  padding: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.virtual-lead-row div {
+  display: grid;
+  gap: 4px;
+}
+
+.virtual-lead-row span,
+.virtual-lead-row time {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
 .not-found {
   display: grid;
   gap: 18px;
@@ -898,7 +969,8 @@ small,
   }
 
   .feature-grid,
-  .product-grid {
+  .product-grid,
+  .insight-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -944,7 +1016,12 @@ small,
   .metric-strip,
   .feature-grid,
   .product-grid,
+  .insight-grid,
   .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .virtual-lead-row {
     grid-template-columns: 1fr;
   }
 
