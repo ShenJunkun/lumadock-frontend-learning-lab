@@ -13,7 +13,7 @@ export function createAntdTheme(colorTheme: ColorTheme): ThemeConfig {
       colorBgBase: isDark ? "#101418" : "#f7f8fa",
       colorError: "#f15a4a",
       colorInfo: "#6f7cff",
-      colorPrimary: "#16a3a3",
+      colorPrimary: isDark ? "#4bd3cf" : "#087f7f",
       colorSuccess: "#36b36b",
       colorText: isDark ? "#f4f7f8" : "#151922",
       colorTextSecondary: isDark ? "#b7c1c8" : "#5a6472",

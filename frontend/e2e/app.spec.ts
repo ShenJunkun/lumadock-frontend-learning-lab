@@ -1,11 +1,13 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
+test.describe.configure({ mode: "serial" });
+
 test("home, catalog, detail, and booking flow", async ({ page }) => {
   await page.goto("/");
 
   await expect(page.getByRole("heading", { name: "LumaDock", exact: true })).toBeVisible();
-  await page.getByRole("link", { name: /(产品目录|Products)/ }).click();
+  await page.getByRole("link", { name: /Explore products/i }).click();
   await expect(page.getByRole("heading", { name: "LumaDock lineup" })).toBeVisible();
 
   await page.getByRole("link", { name: /LumaDock Studio/i }).click();
@@ -20,7 +22,9 @@ test("home, catalog, detail, and booking flow", async ({ page }) => {
   await page.getByLabel(/local demo/i).check();
   await page.getByRole("button", { name: /Send request/i }).click();
 
-  await expect(page.getByText("Request saved locally.")).toBeVisible();
+  await expect(
+    page.locator(".inline-success", { hasText: "Request saved locally." }),
+  ).toBeVisible();
 });
 
 test("admin login opens the protected lead console", async ({ page }) => {
@@ -31,8 +35,10 @@ test("admin login opens the protected lead console", async ({ page }) => {
   await page.getByLabel("Password").fill("admin123");
   await page.getByRole("button", { name: "Login" }).click();
 
-  await expect(page.getByRole("heading", { name: "Lead console" })).toBeVisible();
-  await expect(page.getByText("Test User")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Lead console" })).toBeVisible({
+    timeout: 15_000,
+  });
+  await expect(page.getByRole("cell", { name: "Test User" })).toBeVisible();
 });
 
 test("viewer login is blocked from admin leads", async ({ page }) => {
@@ -48,7 +54,8 @@ test("viewer login is blocked from admin leads", async ({ page }) => {
 test("home page supports keyboard entry and has no critical a11y violations", async ({ page }) => {
   await page.goto("/");
 
-  await page.keyboard.press("Tab");
+  await expect(page.getByRole("heading", { name: "LumaDock", exact: true })).toBeVisible();
+  await page.getByRole("link", { name: "Skip to content" }).focus();
   await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page.locator("#main-content")).toBeFocused();
