@@ -1,5 +1,6 @@
 /// <reference types="vitest" />
 import react from "@vitejs/plugin-react";
+import { fileURLToPath, URL } from "node:url";
 import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "vitest/config";
 
@@ -17,6 +18,11 @@ export default defineConfig({
         template: "treemap",
       }),
   ],
+  resolve: {
+    alias: {
+      "@lumadock/ui": fileURLToPath(new URL("../packages/ui/src/index.ts", import.meta.url)),
+    },
+  },
   server: {
     host: "127.0.0.1",
     port: 5173,

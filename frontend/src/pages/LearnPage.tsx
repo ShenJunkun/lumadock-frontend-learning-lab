@@ -1,3 +1,4 @@
+import { defaultArchitectureItems, LearningArchitecturePanel } from "@lumadock/ui";
 import { BookOpenCheck, Code2, GitBranch, Rocket, Sparkles } from "lucide-react";
 
 import { AntdWorkbenchPreview } from "../components/AntdWorkbenchPreview";
@@ -76,6 +77,13 @@ export function LearnPage() {
           );
         })}
       </div>
+
+      <LearningArchitecturePanel
+        eyebrow="P3 architecture"
+        title="Shared UI package prototype"
+        summary="A small @lumadock/ui package is consumed by the web app through an alias before the project moves to a full workspace layout."
+        items={defaultArchitectureItems}
+      />
 
       <AntdWorkbenchPreview />
     </section>
