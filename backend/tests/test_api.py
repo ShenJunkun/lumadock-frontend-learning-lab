@@ -178,3 +178,18 @@ def test_admin_leads_requires_token(client: TestClient) -> None:
     response = client.get("/api/admin/leads")
 
     assert response.status_code == 401
+
+
+def test_openapi_contracts_expose_frontend_shapes(client: TestClient) -> None:
+    schema = client.get("/openapi.json").json()
+    schemas = schema["components"]["schemas"]
+
+    assert {"id", "name", "price", "features", "specs"}.issubset(
+        schemas["ProductRead"]["properties"].keys()
+    )
+    assert {"access_token", "token_type", "user"}.issubset(
+        schemas["TokenResponse"]["properties"].keys()
+    )
+    assert {"product_name", "configuration", "created_at"}.issubset(
+        schemas["AdminLeadRead"]["properties"].keys()
+    )

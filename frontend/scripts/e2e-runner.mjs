@@ -54,6 +54,10 @@ const server = spawn(
   [viteBin, "--host", "127.0.0.1", "--port", "5173", "--strictPort"],
   {
     cwd: root,
+    env: {
+      ...process.env,
+      VITE_ENABLE_MOCKS: "true",
+    },
     stdio: "inherit",
   },
 );

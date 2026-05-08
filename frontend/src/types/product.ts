@@ -28,7 +28,14 @@ export type LeadPayload = {
   configuration: Record<string, unknown>;
 };
 
-export type LeadResponse = LeadPayload & {
+export type LeadResponse = {
+  name: string;
+  email: string;
+  company: string | null;
+  role: string | null;
+  message: string | null;
+  configuration: Record<string, unknown>;
   id: number;
+  product_id: string | null;
   created_at: string;
 };

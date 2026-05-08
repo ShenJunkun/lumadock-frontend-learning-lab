@@ -1,7 +1,10 @@
 import "@testing-library/jest-dom/vitest";
+import { afterAll, afterEach, beforeAll } from "vitest";
 import { vi } from "vitest";
 
 import "../i18n";
+import { resetMockData } from "../mocks/handlers";
+import { server } from "../mocks/server";
 
 class ResizeObserverMock {
   observe() {
@@ -61,3 +64,10 @@ const getComputedStyle = window.getComputedStyle;
 
 window.getComputedStyle = (element: Element, pseudoElement?: string | null) =>
   getComputedStyle(element, pseudoElement ? undefined : pseudoElement);
+
+beforeAll(() => server.listen({ onUnhandledRequest: "bypass" }));
+afterEach(() => {
+  resetMockData();
+  server.resetHandlers();
+});
+afterAll(() => server.close());
