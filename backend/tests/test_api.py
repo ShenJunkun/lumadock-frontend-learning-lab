@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.database import Base, get_session
-from app.main import app
+from app.main import app, get_cors_origins
 from app.seed import seed_products, seed_users
 
 
@@ -193,3 +193,9 @@ def test_openapi_contracts_expose_frontend_shapes(client: TestClient) -> None:
     assert {"product_name", "configuration", "created_at"}.issubset(
         schemas["AdminLeadRead"]["properties"].keys()
     )
+
+
+def test_cors_origins_are_configurable(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("CORS_ORIGINS", "https://lumadock.example, http://127.0.0.1:5173")
+
+    assert get_cors_origins() == ["https://lumadock.example", "http://127.0.0.1:5173"]

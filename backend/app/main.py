@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 
@@ -14,6 +15,14 @@ from app.database import SessionLocal, get_session, init_db
 from app.models import Lead, Product
 from app.schemas import LeadCreate, LeadRead, ProductRead, StatsRead
 from app.seed import seed_products, seed_users
+
+
+def get_cors_origins() -> list[str]:
+    raw_origins = os.getenv(
+        "CORS_ORIGINS",
+        "http://127.0.0.1:5173,http://localhost:5173",
+    )
+    return [origin.strip() for origin in raw_origins.split(",") if origin.strip()]
 
 
 @asynccontextmanager
@@ -34,7 +43,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://127.0.0.1:5173", "http://localhost:5173"],
+    allow_origins=get_cors_origins(),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
