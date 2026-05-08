@@ -1,0 +1,20 @@
+{
+  "name": "lumadock-learning-lab",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Independent React + TypeScript + FastAPI frontend learning product lab.",
+  "scripts": {
+    "frontend:dev": "npm.cmd --prefix frontend run dev",
+    "frontend:typecheck": "npm.cmd --prefix frontend run typecheck",
+    "frontend:test": "npm.cmd --prefix frontend run test",
+    "frontend:build": "npm.cmd --prefix frontend run build",
+    "frontend:e2e": "npm.cmd --prefix frontend run test:e2e",
+    "backend:dev": "conda run -n frontend-product-lab uvicorn app.main:app --app-dir backend --reload --host 127.0.0.1 --port 8001",
+    "backend:test": "conda run -n frontend-product-lab pytest backend",
+    "verify": "npm.cmd --prefix frontend run typecheck && npm.cmd --prefix frontend run test && npm.cmd --prefix frontend run build && conda run -n frontend-product-lab pytest backend"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
+
