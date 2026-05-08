@@ -41,6 +41,7 @@ npm.cmd --prefix frontend run test:e2e
 
 Playwright 覆盖首页、目录、详情和预约提交流程。测试会 mock lead 提交接口，因此不依赖真实后端。
 `test:e2e` 脚本会自动启动并关闭 Vite dev server。
+E2E 也覆盖访客跳登录、admin 登录进入后台、viewer 被角色权限拦截。
 
 ## git 提交流程
 

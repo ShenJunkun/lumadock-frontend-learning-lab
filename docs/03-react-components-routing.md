@@ -14,6 +14,8 @@
 - `/products/:productId` 详情页：路由参数、规格、配置器。
 - `/book` 预约页：产品选择、配置快照、表单提交。
 - `/learn` 学习章节导航。
+- `/login` 登录页：Antd Form 调用 JWT 登录接口。
+- `/admin` 后台页：admin-only leads 表格。
 
 ## 组件拆分
 
@@ -27,6 +29,12 @@
 - `AntdWorkbenchPreview` 展示 Table、Modal、Button、Result 的组合方式。
 - 后续登录和后台页面复用 Antd Form、Table、Modal 和 Result。
 - 产品视觉、复杂 3D 和页面骨架仍保留自定义 CSS/Tailwind，避免把整站做成默认后台模板。
+
+## 路由守卫
+
+- `PrivateRoute` 未登录时跳转 `/login`，并保留来源路径。
+- `RoleRoute` 检查 `admin` / `viewer` 角色，不满足时显示 403。
+- `/admin` 同时使用两层守卫，只允许 admin 查看预约线索。
 
 练习建议：
 

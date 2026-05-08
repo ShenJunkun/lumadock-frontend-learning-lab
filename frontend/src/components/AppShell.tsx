@@ -1,6 +1,17 @@
-import { CalendarDays, GraduationCap, Home, Layers3, PackageSearch } from "lucide-react";
+import {
+  CalendarDays,
+  GraduationCap,
+  Home,
+  Layers3,
+  LogIn,
+  LogOut,
+  PackageSearch,
+  ShieldCheck,
+} from "lucide-react";
 import type { ReactNode } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+
+import { useAuthStore } from "../store/authStore";
 
 type AppShellProps = {
   children: ReactNode;
@@ -14,6 +25,15 @@ const navItems = [
 ];
 
 export function AppShell({ children }: AppShellProps) {
+  const navigate = useNavigate();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const logout = useAuthStore((state) => state.logout);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
   return (
     <div className="app-shell">
       <header className="site-header">
@@ -38,6 +58,29 @@ export function AppShell({ children }: AppShellProps) {
               </NavLink>
             );
           })}
+          {isAuthenticated && (
+            <NavLink
+              to="/admin"
+              className={({ isActive }) => `nav-link${isActive ? " is-active" : ""}`}
+            >
+              <ShieldCheck size={17} aria-hidden="true" />
+              <span>后台</span>
+            </NavLink>
+          )}
+          {!isAuthenticated ? (
+            <NavLink
+              to="/login"
+              className={({ isActive }) => `nav-link${isActive ? " is-active" : ""}`}
+            >
+              <LogIn size={17} aria-hidden="true" />
+              <span>登录</span>
+            </NavLink>
+          ) : (
+            <button className="nav-link nav-button" type="button" onClick={handleLogout}>
+              <LogOut size={17} aria-hidden="true" />
+              <span>退出</span>
+            </button>
+          )}
         </nav>
       </header>
       <main>{children}</main>

@@ -12,8 +12,9 @@
 6. 状态管理：Zustand 保存配置器选择。
 7. 表单：react-hook-form + zod 做预约字段校验。
 8. 动画与 3D：Framer Motion 滚动出现，React Three Fiber 做轻量产品模型。
-9. 测试：Vitest、Testing Library、Playwright、pytest。
-10. 构建与提交：typecheck、test、build、git commit。
+9. 权限认证：JWT 登录、localStorage token、路由守卫、admin/viewer 角色。
+10. 测试：Vitest、Testing Library、Playwright、pytest。
+11. 构建与提交：lint、format、typecheck、test、build、git commit。
 
 ## 项目边界
 
@@ -21,4 +22,3 @@
 - 不连接 RadarAgent。
 - 不把代码提交到其他仓库。
 - 数据只保存在本地 SQLite。
-
