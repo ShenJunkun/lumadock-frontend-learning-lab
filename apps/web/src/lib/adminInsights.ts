@@ -1,4 +1,4 @@
-import type { AdminLead } from "../types/auth";
+import type { AdminLead } from "@lumadock/api-client";
 
 export type InsightDatum = {
   name: string;

@@ -1,7 +1,7 @@
+import type { AuthTokenResponse, AuthUser } from "@lumadock/api-client";
 import { create } from "zustand";
 
 import { setAuthTokenProvider } from "../api/client";
-import type { AuthTokenResponse, AuthUser } from "../types/auth";
 
 export const AUTH_STORAGE_KEY = "lumadock.auth";
 

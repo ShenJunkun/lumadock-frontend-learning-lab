@@ -1,7 +1,7 @@
-import { apiRequest } from "./client";
-import { AdminLeadsSchema } from "./contracts";
-import type { AdminLead } from "../types/auth";
+import type { AdminLead } from "@lumadock/api-client";
+
+import { lumadockApiClient } from "./client";
 
 export async function getAdminLeads(): Promise<AdminLead[]> {
-  return AdminLeadsSchema.parse(await apiRequest<unknown>("/api/admin/leads"));
+  return lumadockApiClient.getAdminLeads();
 }

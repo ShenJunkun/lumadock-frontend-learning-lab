@@ -5,7 +5,7 @@ import {
   buildFinishLeadCounts,
   buildProductLeadCounts,
 } from "./adminInsights";
-import type { AdminLead } from "../types/auth";
+import type { AdminLead } from "@lumadock/api-client";
 
 const leads: AdminLead[] = [
   {

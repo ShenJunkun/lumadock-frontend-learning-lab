@@ -9,7 +9,7 @@ import {
   mockUsers,
 } from "./fixtures";
 import { fallbackProducts } from "../data/fallbackProducts";
-import type { LeadPayload } from "../types/product";
+import type { LeadPayload } from "@lumadock/api-client";
 
 let leads = [...mockAdminLeads];
 

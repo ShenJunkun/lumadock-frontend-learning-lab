@@ -39,3 +39,22 @@ export type LeadResponse = {
   product_id: string | null;
   created_at: string;
 };
+
+export type UserRole = "admin" | "viewer";
+
+export type AuthUser = {
+  id: number;
+  email: string;
+  name: string;
+  role: UserRole;
+};
+
+export type AuthTokenResponse = {
+  access_token: string;
+  token_type: "bearer";
+  user: AuthUser;
+};
+
+export type AdminLead = LeadResponse & {
+  product_name: string | null;
+};

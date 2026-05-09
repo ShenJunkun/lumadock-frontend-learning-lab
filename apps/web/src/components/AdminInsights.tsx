@@ -1,3 +1,4 @@
+import type { AdminLead } from "@lumadock/api-client";
 import { Empty } from "antd";
 import {
   Bar,
@@ -19,7 +20,6 @@ import {
   buildFinishLeadCounts,
   buildProductLeadCounts,
 } from "../lib/adminInsights";
-import type { AdminLead } from "../types/auth";
 
 type AdminInsightsProps = {
   leads: AdminLead[];

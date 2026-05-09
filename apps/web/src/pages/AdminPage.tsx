@@ -1,3 +1,4 @@
+import type { AdminLead } from "@lumadock/api-client";
 import { StatusBadge, SurfaceCard } from "@lumadock/ui";
 import { useQuery } from "@tanstack/react-query";
 import { Button, Descriptions, Modal, Result, Table, notification } from "antd";
@@ -9,7 +10,6 @@ import { getAdminLeads } from "../api/admin";
 import { AdminInsights } from "../components/AdminInsights";
 import { AdminTableSkeleton } from "../components/SkeletonStates";
 import { VirtualLeadList } from "../components/VirtualLeadList";
-import type { AdminLead } from "../types/auth";
 
 export function AdminPage() {
   const [selectedLead, setSelectedLead] = useState<AdminLead | null>(null);

@@ -1,9 +1,9 @@
+import type { Product } from "@lumadock/api-client";
 import { ArrowRight } from "lucide-react";
 import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
 
 import { ResponsiveProductImage } from "./ResponsiveProductImage";
-import type { Product } from "../types/product";
 
 type ProductCardProps = {
   onIntent?: (productId: string) => void;

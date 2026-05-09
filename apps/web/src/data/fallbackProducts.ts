@@ -1,4 +1,4 @@
-import type { Product } from "../types/product";
+import type { Product } from "@lumadock/api-client";
 
 export const fallbackProducts: Product[] = [
   {

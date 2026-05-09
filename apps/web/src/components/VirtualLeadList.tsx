@@ -1,7 +1,6 @@
+import type { AdminLead } from "@lumadock/api-client";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useRef } from "react";
-
-import type { AdminLead } from "../types/auth";
 
 type VirtualLeadListProps = {
   leads: AdminLead[];

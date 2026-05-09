@@ -4,8 +4,9 @@ import type { ReactNode } from "react";
 import { useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 
+import type { UserRole } from "@lumadock/api-client";
+
 import { useAuthStore } from "../store/authStore";
-import type { UserRole } from "../types/auth";
 
 type PrivateRouteProps = {
   children: ReactNode;

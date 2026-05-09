@@ -20,6 +20,9 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
+      "@lumadock/api-client": fileURLToPath(
+        new URL("../../packages/api-client/src/index.ts", import.meta.url),
+      ),
       "@lumadock/ui": fileURLToPath(new URL("../../packages/ui/src/index.ts", import.meta.url)),
     },
   },

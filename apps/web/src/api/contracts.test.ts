@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { AdminLeadsSchema, ProductsSchema, StatsSchema, TokenResponseSchema } from "./contracts";
+import {
+  AdminLeadsSchema,
+  ProductsSchema,
+  StatsSchema,
+  TokenResponseSchema,
+} from "@lumadock/api-client";
 import { fallbackProducts } from "../data/fallbackProducts";
 
 describe("API contracts", () => {

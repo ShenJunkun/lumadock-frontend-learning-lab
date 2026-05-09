@@ -1,6 +1,13 @@
+import type {
+  AdminLead,
+  AuthTokenResponse,
+  AuthUser,
+  LeadPayload,
+  LeadResponse,
+  Stats,
+} from "@lumadock/api-client";
+
 import { fallbackProducts } from "../data/fallbackProducts";
-import type { AuthTokenResponse, AuthUser, AdminLead } from "../types/auth";
-import type { LeadPayload, LeadResponse, Stats } from "../types/product";
 
 export const mockUsers = {
   admin: {

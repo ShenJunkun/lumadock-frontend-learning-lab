@@ -3,6 +3,8 @@
   "compilerOptions": {
     "allowJs": false,
     "paths": {
+      "@lumadock/api-client": ["../../packages/api-client/src/index.ts"],
+      "@lumadock/api-client/*": ["../../packages/api-client/src/*"],
       "@lumadock/ui": ["../../packages/ui/src/index.ts"],
       "@lumadock/ui/*": ["../../packages/ui/src/*"],
       "react": ["./node_modules/@types/react/index.d.ts"],
