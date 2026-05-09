@@ -1,7 +1,7 @@
 import { getP5LearningMilestone, p5LearningMilestones } from "./p5LearningRoadmap";
 
 describe("p5LearningRoadmap", () => {
-  it("starts P5 with PWA complete and future mastery topics planned", () => {
+  it("tracks P5 mastery topics as completed", () => {
     expect(p5LearningMilestones.map((milestone) => milestone.id)).toEqual([
       "pwa-offline",
       "performance-budgets",
@@ -15,7 +15,8 @@ describe("p5LearningRoadmap", () => {
       label: "PWA / offline shell",
       status: "Completed",
     });
-    expect(getP5LearningMilestone("performance-budgets")?.status).toBe("Completed");
-    expect(getP5LearningMilestone("security-privacy")?.status).toBe("Completed");
+    for (const milestone of p5LearningMilestones) {
+      expect(milestone.status).toBe("Completed");
+    }
   });
 });

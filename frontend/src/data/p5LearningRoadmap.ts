@@ -35,20 +35,20 @@ export const p5LearningMilestones: P5LearningMilestone[] = [
   {
     id: "visual-regression",
     label: "Visual regression",
-    status: "Planned",
-    evidence: "Protect key pages with Playwright screenshot baselines in a later pass.",
+    status: "Completed",
+    evidence: "Protect key pages with Playwright screenshot baselines across desktop and mobile.",
   },
   {
     id: "design-system",
     label: "Design system depth",
-    status: "Planned",
-    evidence: "Move more token examples and component states into @lumadock/ui over time.",
+    status: "Completed",
+    evidence: "Shared tokens and primitives live in @lumadock/ui and are consumed by the web app.",
   },
   {
     id: "state-modeling",
     label: "State modeling",
-    status: "Planned",
-    evidence: "Use reducers or state machines for complex workflows when form logic grows.",
+    status: "Completed",
+    evidence: "Lead submission uses an explicit reducer for idle, submitting, success, and error.",
   },
 ];
 
