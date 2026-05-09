@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { message } from "antd";
 import { Send } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useReducer } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
 import { submitLead } from "../api/leads";
@@ -14,6 +14,10 @@ import {
 import { trackEvent } from "../lib/telemetry";
 import { useConfiguratorStore } from "../store/configuratorStore";
 import { leadFormSchema, type LeadFormValues } from "./leadFormSchema";
+import {
+  createLeadSubmissionState,
+  leadSubmissionReducer,
+} from "./leadSubmissionState";
 
 type LeadFormProps = {
   productId?: string;
@@ -21,6 +25,11 @@ type LeadFormProps = {
 
 export function LeadForm({ productId }: LeadFormProps) {
   const snapshot = useConfiguratorStore((state) => state.snapshot);
+  const [submissionState, dispatchSubmission] = useReducer(
+    leadSubmissionReducer,
+    productId,
+    createLeadSubmissionState,
+  );
   const mutation = useMutation({
     mutationFn: submitLead,
   });
@@ -40,6 +49,7 @@ export function LeadForm({ productId }: LeadFormProps) {
 
   useEffect(() => {
     reset(getLeadFormDefaultValues(productId));
+    dispatchSubmission({ productId, type: "reset" });
   }, [productId, reset]);
 
   useEffect(() => {
@@ -48,6 +58,7 @@ export function LeadForm({ productId }: LeadFormProps) {
 
   const onSubmit = handleSubmit(async (values) => {
     const submittedProductId = values.productId || productId;
+    dispatchSubmission({ productId: submittedProductId, type: "submit" });
     try {
       await mutation.mutateAsync({
         product_id: submittedProductId,
@@ -62,6 +73,7 @@ export function LeadForm({ productId }: LeadFormProps) {
         productId: submittedProductId ?? "unknown",
       });
       clearBookingDraft(submittedProductId);
+      dispatchSubmission({ message: "Request saved locally.", type: "succeed" });
       void message.success("Request saved locally.");
       reset({
         productId,
@@ -75,6 +87,10 @@ export function LeadForm({ productId }: LeadFormProps) {
     } catch {
       trackEvent("booking_submit_failed", {
         productId: submittedProductId ?? "unknown",
+      });
+      dispatchSubmission({
+        message: "Could not reach the local API. Start FastAPI on port 8001 and try again.",
+        type: "fail",
       });
       void message.error("Could not reach the local API.");
     }
@@ -125,24 +141,24 @@ export function LeadForm({ productId }: LeadFormProps) {
       </label>
       {errors.consent && <small className="form-error">{errors.consent.message}</small>}
 
-      {mutation.isError && (
+      {submissionState.status === "error" && submissionState.message && (
         <div className="inline-alert" role="alert">
-          Could not reach the local API. Start FastAPI on port 8001 and try again.
+          {submissionState.message}
         </div>
       )}
-      {mutation.isSuccess && (
+      {submissionState.status === "success" && submissionState.message && (
         <div className="inline-success" role="status">
-          Request saved locally.
+          {submissionState.message}
         </div>
       )}
 
       <button
         className="primary-button"
         type="submit"
-        disabled={isSubmitting || mutation.isPending}
+        disabled={isSubmitting || submissionState.status === "submitting"}
       >
         <Send size={17} aria-hidden="true" />
-        <span>{mutation.isPending ? "Sending" : "Send request"}</span>
+        <span>{submissionState.status === "submitting" ? "Sending" : "Send request"}</span>
       </button>
     </form>
   );
