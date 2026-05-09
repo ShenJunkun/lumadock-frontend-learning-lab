@@ -1,12 +1,14 @@
 import { spawn } from "node:child_process";
 import { once } from "node:events";
+import { createRequire } from "node:module";
 import { createConnection } from "node:net";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const viteBin = join(root, "node_modules", "vite", "bin", "vite.js");
-const playwrightCli = join(root, "node_modules", "@playwright", "test", "cli.js");
+const require = createRequire(import.meta.url);
+const viteBin = join(dirname(require.resolve("vite/package.json")), "bin", "vite.js");
+const playwrightCli = require.resolve("@playwright/test/cli");
 const playwrightArgs = process.argv.slice(2);
 
 function wait(ms) {

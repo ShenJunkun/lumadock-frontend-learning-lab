@@ -1,7 +1,4 @@
-import {
-  createLeadSubmissionState,
-  leadSubmissionReducer,
-} from "./leadSubmissionState";
+import { createLeadSubmissionState, leadSubmissionReducer } from "./leadSubmissionState";
 
 describe("leadSubmissionReducer", () => {
   it("models the happy path explicitly", () => {

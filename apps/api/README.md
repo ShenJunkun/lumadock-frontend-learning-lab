@@ -5,7 +5,7 @@ FastAPI + SQLite service for local product data and预约线索.
 ## Run
 
 ```powershell
-conda run -n frontend-product-lab uvicorn app.main:app --app-dir backend --reload --host 127.0.0.1 --port 8001
+npm.cmd run api:dev
 ```
 
 ## Endpoints
@@ -19,7 +19,7 @@ conda run -n frontend-product-lab uvicorn app.main:app --app-dir backend --reloa
 - `GET /api/auth/me`
 - `GET /api/admin/leads`
 
-The SQLite database defaults to `backend/lumadock.db`. Override with `LUMADOCK_DATABASE_URL`.
+The SQLite database defaults to `apps/api/lumadock.db`. Override with `LUMADOCK_DATABASE_URL`.
 
 ## Demo Accounts
 

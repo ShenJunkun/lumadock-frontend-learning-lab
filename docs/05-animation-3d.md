@@ -24,5 +24,4 @@
 
 ## 视觉素材
 
-`frontend/public/assets/lumadock-hero.png` 是项目本地静态素材。应用运行时不会调用任何 AI 服务。
-
+`apps/web/public/assets/lumadock-hero.png` 是项目本地静态素材。应用运行时不会调用任何 AI 服务。

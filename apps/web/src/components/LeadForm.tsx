@@ -14,10 +14,7 @@ import {
 import { trackEvent } from "../lib/telemetry";
 import { useConfiguratorStore } from "../store/configuratorStore";
 import { leadFormSchema, type LeadFormValues } from "./leadFormSchema";
-import {
-  createLeadSubmissionState,
-  leadSubmissionReducer,
-} from "./leadSubmissionState";
+import { createLeadSubmissionState, leadSubmissionReducer } from "./leadSubmissionState";
 
 type LeadFormProps = {
   productId?: string;

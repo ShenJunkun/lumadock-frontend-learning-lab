@@ -2,11 +2,11 @@
 
 ## HTML 入口
 
-`frontend/index.html` 只负责提供根节点和加载 `src/main.tsx`。真实界面由 React 管理。
+`apps/web/index.html` 只负责提供根节点和加载 `src/main.tsx`。真实界面由 React 管理。
 
 ## CSS 学习点
 
-`frontend/src/styles/global.css` 覆盖全局设计变量和复杂产品视觉，Tailwind 负责局部布局、间距和响应式工具类。两者分工如下：
+`apps/web/src/styles/global.css` 覆盖全局设计变量和复杂产品视觉，Tailwind 负责局部布局、间距和响应式工具类。两者分工如下：
 
 - `:root` 设计变量。
 - sticky header 与响应式 nav。
@@ -34,10 +34,10 @@ xl  1280px
 
 ## TypeScript 学习点
 
-`frontend/src/types/product.ts` 定义产品、统计和预约提交类型。前端请求和组件都依赖这些类型，能在构建前发现字段拼写错误。
+`packages/api-client/src/types.ts` 定义产品、统计、认证和预约提交类型。前端请求和组件都依赖这些类型，能在构建前发现字段拼写错误。
 
 练习建议：
 
 1. 给 `Product` 增加一个 `availability` 字段。
 2. 在后端 schema、seed、前端卡片中同步使用它。
-3. 运行 `npm.cmd --prefix frontend run typecheck`。
+3. 运行 `npm.cmd run web:typecheck`。

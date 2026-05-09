@@ -3,11 +3,11 @@
 ## 前端验证
 
 ```powershell
-npm.cmd --prefix frontend run lint
-npm.cmd --prefix frontend run format:check
-npm.cmd --prefix frontend run typecheck
-npm.cmd --prefix frontend run test
-npm.cmd --prefix frontend run build
+npm.cmd run web:lint
+npm.cmd run web:format
+npm.cmd run web:typecheck
+npm.cmd run web:test
+npm.cmd run web:build
 ```
 
 测试覆盖：
@@ -22,7 +22,7 @@ npm.cmd --prefix frontend run build
 ## 后端验证
 
 ```powershell
-conda run -n frontend-product-lab pytest backend
+npm.cmd run api:test
 ```
 
 测试覆盖：
@@ -40,7 +40,7 @@ conda run -n frontend-product-lab pytest backend
 ## E2E
 
 ```powershell
-npm.cmd --prefix frontend run test:e2e
+npm.cmd run web:e2e
 ```
 
 Playwright 覆盖首页、目录、详情、预约提交、登录权限和基础 A11y。E2E 通过 `VITE_ENABLE_MOCKS=true` 启用 MSW，因此不依赖真实后端。
@@ -50,10 +50,10 @@ E2E 也覆盖访客跳登录、admin 登录进入后台、viewer 被角色权限
 ## Bundle 分析
 
 ```powershell
-npm.cmd --prefix frontend run build:analyze
+npm.cmd run web:build:analyze
 ```
 
-该命令会在 `frontend/dist/bundle-report.html` 生成 `rollup-plugin-visualizer` 报告，用来观察 Antd、Three、Framer Motion、Recharts 等依赖体积。
+该命令会在 `apps/web/dist/bundle-report.html` 生成 `rollup-plugin-visualizer` 报告，用来观察 Antd、Three、Framer Motion、Recharts 等依赖体积。
 
 ## git 提交流程
 
@@ -80,10 +80,10 @@ docs: complete project tutorial and runbook
 前端使用 ESLint 做 TypeScript、React Hooks 和 React Refresh 规则检查，Prettier 负责格式统一：
 
 ```powershell
-npm.cmd --prefix frontend run lint
-npm.cmd --prefix frontend run lint:fix
-npm.cmd --prefix frontend run format:check
-npm.cmd --prefix frontend run format
+npm.cmd run web:lint
+npm.cmd --workspace @lumadock/web run lint:fix
+npm.cmd run web:format
+npm.cmd --workspace @lumadock/web run format
 ```
 
 提交前可安装 git hook：
