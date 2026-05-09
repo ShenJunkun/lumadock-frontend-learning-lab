@@ -1,3 +1,4 @@
+import { EmptyState as SharedEmptyState } from "@lumadock/ui";
 import { Skeleton } from "antd";
 import { AlertCircle, Loader2, SearchX } from "lucide-react";
 
@@ -31,6 +32,16 @@ export function ErrorState({ title, message }: StateBlockProps) {
 }
 
 export function EmptyState({ title, message }: StateBlockProps) {
+  return (
+    <SharedEmptyState
+      title={title}
+      message={message}
+      style={{ minHeight: 120, textAlign: "left" }}
+    />
+  );
+}
+
+export function LegacyEmptyState({ title, message }: StateBlockProps) {
   return (
     <div className="state-block">
       <SearchX className="state-icon" size={24} aria-hidden="true" />

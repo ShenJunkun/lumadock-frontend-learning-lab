@@ -1,5 +1,6 @@
+import { StatusBadge, SurfaceCard } from "@lumadock/ui";
 import { useQuery } from "@tanstack/react-query";
-import { Button, Descriptions, Modal, Result, Table, Tag, notification } from "antd";
+import { Button, Descriptions, Modal, Result, Table, notification } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useEffect } from "react";
 import { useMemo, useState } from "react";
@@ -78,13 +79,13 @@ export function AdminPage() {
         <p>Protected by JWT and the admin role.</p>
       </div>
 
-      <div className="rounded-ui border border-line bg-surface p-4 shadow-soft">
+      <SurfaceCard>
         <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <div>
             <h2 className="m-0 text-2xl font-extrabold">预约线索</h2>
             <p className="m-0 text-sm text-muted">Only admin users can read this table.</p>
           </div>
-          <Tag color="cyan">admin only</Tag>
+          <StatusBadge tone="accent">admin only</StatusBadge>
         </div>
 
         {leadsQuery.isLoading ? (
@@ -106,7 +107,7 @@ export function AdminPage() {
             />
           </>
         )}
-      </div>
+      </SurfaceCard>
 
       <Modal
         open={Boolean(selectedLead)}
