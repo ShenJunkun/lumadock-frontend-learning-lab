@@ -26,6 +26,10 @@ backend/lumadock.db
 !frontend/.env.development
 !frontend/.env.production
 !frontend/.env.test
+!apps/web/.env.example
+!apps/web/.env.development
+!apps/web/.env.production
+!apps/web/.env.test
 
 # Editors and OS
 .DS_Store

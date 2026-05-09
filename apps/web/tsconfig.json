@@ -1,10 +1,10 @@
 {
-  "extends": "../tsconfig.base.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "allowJs": false,
     "paths": {
-      "@lumadock/ui": ["../packages/ui/src/index.ts"],
-      "@lumadock/ui/*": ["../packages/ui/src/*"],
+      "@lumadock/ui": ["../../packages/ui/src/index.ts"],
+      "@lumadock/ui/*": ["../../packages/ui/src/*"],
       "react": ["./node_modules/@types/react/index.d.ts"],
       "react/jsx-runtime": ["./node_modules/@types/react/jsx-runtime.d.ts"]
     },

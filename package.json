@@ -4,7 +4,7 @@
   "private": true,
   "description": "Independent React + TypeScript + FastAPI frontend learning product lab.",
   "workspaces": [
-    "frontend",
+    "apps/web",
     "backend",
     "packages/*"
   ],
@@ -20,8 +20,8 @@
     "api:dev": "npm.cmd --workspace @lumadock/api run dev",
     "api:test": "npm.cmd --workspace @lumadock/api run test",
     "ui:typecheck": "npm.cmd --workspace @lumadock/ui run typecheck",
-    "hooks:install": "node frontend/node_modules/husky/bin.js",
-    "precommit": "node frontend/node_modules/lint-staged/bin/lint-staged.js --config lint-staged.config.mjs",
+    "hooks:install": "node apps/web/node_modules/husky/bin.js",
+    "precommit": "node apps/web/node_modules/lint-staged/bin/lint-staged.js --config lint-staged.config.mjs",
     "verify": "npm.cmd run web:lint && npm.cmd run web:format && npm.cmd run web:typecheck && npm.cmd run web:test && npm.cmd run web:build && npm.cmd run ui:typecheck && npm.cmd run api:test"
   },
   "devDependencies": {

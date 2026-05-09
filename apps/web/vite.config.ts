@@ -20,7 +20,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@lumadock/ui": fileURLToPath(new URL("../packages/ui/src/index.ts", import.meta.url)),
+      "@lumadock/ui": fileURLToPath(new URL("../../packages/ui/src/index.ts", import.meta.url)),
     },
   },
   server: {

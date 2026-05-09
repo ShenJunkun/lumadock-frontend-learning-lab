@@ -1,8 +1,8 @@
 {
-  "buildCommand": "npm --prefix frontend run build",
+  "buildCommand": "npm --workspace @lumadock/web run build",
   "framework": "vite",
-  "installCommand": "npm --prefix frontend ci",
-  "outputDirectory": "frontend/dist",
+  "installCommand": "npm ci",
+  "outputDirectory": "apps/web/dist",
   "rewrites": [
     {
       "destination": "/index.html",
