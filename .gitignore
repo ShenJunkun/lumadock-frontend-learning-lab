@@ -17,6 +17,9 @@ test-results/
 backend/*.db
 backend/*.sqlite
 backend/lumadock.db
+apps/api/*.db
+apps/api/*.sqlite
+apps/api/lumadock.db
 
 # Environment
 .env

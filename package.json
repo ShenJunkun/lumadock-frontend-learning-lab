@@ -5,7 +5,7 @@
   "description": "Independent React + TypeScript + FastAPI frontend learning product lab.",
   "workspaces": [
     "apps/web",
-    "backend",
+    "apps/api",
     "packages/*"
   ],
   "scripts": {
