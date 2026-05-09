@@ -10,9 +10,11 @@ import { getAdminLeads } from "../api/admin";
 import { AdminInsights } from "../components/AdminInsights";
 import { AdminTableSkeleton } from "../components/SkeletonStates";
 import { VirtualLeadList } from "../components/VirtualLeadList";
+import { isFeatureEnabled } from "../lib/featureFlags";
 
 export function AdminPage() {
   const [selectedLead, setSelectedLead] = useState<AdminLead | null>(null);
+  const showAdminInsights = isFeatureEnabled("adminInsights");
   const leadsQuery = useQuery({
     queryFn: getAdminLeads,
     queryKey: ["admin", "leads"],
@@ -92,7 +94,7 @@ export function AdminPage() {
           <AdminTableSkeleton />
         ) : (
           <>
-            <AdminInsights leads={leadsQuery.data ?? []} />
+            {showAdminInsights && <AdminInsights leads={leadsQuery.data ?? []} />}
             <section className="activity-panel" aria-labelledby="lead-activity-title">
               <h3 id="lead-activity-title">Lead activity</h3>
               <VirtualLeadList leads={leadsQuery.data ?? []} />
