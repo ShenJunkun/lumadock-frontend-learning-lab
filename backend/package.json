@@ -1,0 +1,9 @@
+{
+  "name": "@lumadock/api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "conda run -n frontend-product-lab uvicorn app.main:app --app-dir . --reload --host 127.0.0.1 --port 8001",
+    "test": "conda run -n frontend-product-lab pytest ."
+  }
+}

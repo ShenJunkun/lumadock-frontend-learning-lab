@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 from collections.abc import Generator
+from pathlib import Path
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
@@ -12,7 +13,8 @@ class Base(DeclarativeBase):
 
 
 def get_database_url() -> str:
-    return os.getenv("LUMADOCK_DATABASE_URL", "sqlite:///./backend/lumadock.db")
+    default_database_path = Path(__file__).resolve().parents[1] / "lumadock.db"
+    return os.getenv("LUMADOCK_DATABASE_URL", f"sqlite:///{default_database_path.as_posix()}")
 
 
 def build_engine(database_url: str):
@@ -36,4 +38,3 @@ def get_session() -> Generator[Session, None, None]:
         yield session
     finally:
         session.close()
-

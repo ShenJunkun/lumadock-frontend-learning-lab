@@ -3,19 +3,30 @@
   "version": "0.1.0",
   "private": true,
   "description": "Independent React + TypeScript + FastAPI frontend learning product lab.",
+  "workspaces": [
+    "frontend",
+    "backend",
+    "packages/*"
+  ],
   "scripts": {
-    "frontend:dev": "npm.cmd --prefix frontend run dev",
-    "frontend:lint": "npm.cmd --prefix frontend run lint",
-    "frontend:format": "npm.cmd --prefix frontend run format:check",
-    "frontend:typecheck": "npm.cmd --prefix frontend run typecheck",
-    "frontend:test": "npm.cmd --prefix frontend run test",
-    "frontend:build": "npm.cmd --prefix frontend run build",
-    "frontend:e2e": "npm.cmd --prefix frontend run test:e2e",
-    "backend:dev": "conda run -n frontend-product-lab uvicorn app.main:app --app-dir backend --reload --host 127.0.0.1 --port 8001",
-    "backend:test": "conda run -n frontend-product-lab pytest backend",
+    "web:dev": "npm.cmd --workspace @lumadock/web run dev",
+    "web:lint": "npm.cmd --workspace @lumadock/web run lint",
+    "web:format": "npm.cmd --workspace @lumadock/web run format:check",
+    "web:typecheck": "npm.cmd --workspace @lumadock/web run typecheck",
+    "web:test": "npm.cmd --workspace @lumadock/web run test",
+    "web:build": "npm.cmd --workspace @lumadock/web run build",
+    "web:build:analyze": "npm.cmd --workspace @lumadock/web run build:analyze",
+    "web:e2e": "npm.cmd --workspace @lumadock/web run test:e2e",
+    "api:dev": "npm.cmd --workspace @lumadock/api run dev",
+    "api:test": "npm.cmd --workspace @lumadock/api run test",
+    "ui:typecheck": "npm.cmd --workspace @lumadock/ui run typecheck",
     "hooks:install": "node frontend/node_modules/husky/bin.js",
     "precommit": "node frontend/node_modules/lint-staged/bin/lint-staged.js --config lint-staged.config.mjs",
-    "verify": "npm.cmd --prefix frontend run lint && npm.cmd --prefix frontend run format:check && npm.cmd --prefix frontend run typecheck && npm.cmd --prefix frontend run test && npm.cmd --prefix frontend run build && conda run -n frontend-product-lab pytest backend"
+    "verify": "npm.cmd run web:lint && npm.cmd run web:format && npm.cmd run web:typecheck && npm.cmd run web:test && npm.cmd run web:build && npm.cmd run ui:typecheck && npm.cmd run api:test"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "typescript": "^5.7.0"
   },
   "engines": {
     "node": ">=20"
