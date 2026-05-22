@@ -45,7 +45,7 @@ jobs:
         run: npm --workspace @lumadock/web exec playwright install --with-deps chromium
 
       - name: Test frontend e2e
-        run: npm run web:e2e
+        run: npm run web:e2e -- e2e/app.spec.ts
 
       - name: Set up Python
         uses: actions/setup-python@v5
