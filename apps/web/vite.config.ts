@@ -4,6 +4,7 @@ import { fileURLToPath, URL } from "node:url";
 import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "vitest/config";
 
+const appRoot = fileURLToPath(new URL(".", import.meta.url));
 const shouldAnalyze = process.env.BUNDLE_ANALYZE === "true";
 
 export default defineConfig({
@@ -18,6 +19,7 @@ export default defineConfig({
         template: "treemap",
       }),
   ],
+  root: appRoot,
   resolve: {
     alias: {
       "@lumadock/api-client": fileURLToPath(

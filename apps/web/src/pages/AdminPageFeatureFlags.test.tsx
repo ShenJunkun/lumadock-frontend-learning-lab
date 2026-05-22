@@ -47,9 +47,7 @@ describe("AdminPage feature flags", () => {
     renderAdminPage();
 
     await waitFor(() => expect(getAdminLeadsMock).toHaveBeenCalled());
-    expect(
-      await screen.findByRole("heading", { name: "Lead activity" }),
-    ).toBeVisible();
+    expect(await screen.findByRole("heading", { name: "Lead activity" })).toBeVisible();
     expect(screen.queryByText("No lead insights yet")).not.toBeInTheDocument();
   });
 });

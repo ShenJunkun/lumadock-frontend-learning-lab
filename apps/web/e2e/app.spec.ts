@@ -51,7 +51,27 @@ test("viewer login is blocked from admin leads", async ({ page }) => {
   await expect(page.getByText("No access")).toBeVisible();
 });
 
+test("configurator priority can be reordered from the keyboard", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+
+  const priorityList = page.getByRole("list", { name: "Configuration priority" }).first();
+  await expect(priorityList.getByRole("listitem").nth(1)).toContainText("Stand");
+
+  await priorityList.getByRole("button", { name: "Move Profile earlier" }).focus();
+  await page.keyboard.press("Enter");
+
+  await expect(priorityList.getByRole("listitem").nth(1)).toContainText("Profile");
+
+  const accessibilityScanResults = await new AxeBuilder({ page })
+    .include(".priority-list")
+    .analyze();
+
+  expect(accessibilityScanResults.violations).toEqual([]);
+});
+
 test("home page supports keyboard entry and has no critical a11y violations", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
 
   await expect(page.getByRole("heading", { name: "LumaDock", exact: true })).toBeVisible();

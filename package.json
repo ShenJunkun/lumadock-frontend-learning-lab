@@ -20,14 +20,18 @@
     "api:dev": "npm.cmd --workspace @lumadock/api run dev",
     "api:test": "npm.cmd --workspace @lumadock/api run test",
     "api-client:typecheck": "npm.cmd --workspace @lumadock/api-client run typecheck",
+    "ui:storybook": "npm.cmd --workspace @lumadock/ui run storybook",
+    "ui:build-storybook": "npm.cmd --workspace @lumadock/ui run build-storybook",
     "ui:typecheck": "npm.cmd --workspace @lumadock/ui run typecheck",
     "hooks:install": "node apps/web/node_modules/husky/bin.js",
     "precommit": "node apps/web/node_modules/lint-staged/bin/lint-staged.js --config lint-staged.config.mjs",
-    "verify": "npm.cmd run web:lint && npm.cmd run web:format && npm.cmd run web:typecheck && npm.cmd run web:test && npm.cmd run web:build && npm.cmd run web:build:analyze && npm.cmd run ui:typecheck && npm.cmd run api-client:typecheck && npm.cmd run api:test"
+    "verify": "npm.cmd run web:lint && npm.cmd run web:format && npm.cmd run web:typecheck && npm.cmd run web:test && npm.cmd run web:build && npm.cmd run web:build:analyze && npm.cmd run ui:typecheck && npm.cmd run ui:build-storybook && npm.cmd run api-client:typecheck && npm.cmd run api:test"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
-    "typescript": "^5.7.0"
+    "jsdom": "^25.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0"
   },
   "engines": {
     "node": ">=20"

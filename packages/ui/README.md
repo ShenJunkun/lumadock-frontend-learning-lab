@@ -16,3 +16,12 @@ Shared presentational primitives for the LumaDock learning workspace.
 - `EmptyState`
 - `StatusBadge`
 - `LearningArchitecturePanel`
+
+## Storybook
+
+P8 adds a package-local Storybook for component states, theme review, and responsive previews:
+
+```powershell
+npm.cmd run ui:storybook
+npm.cmd run ui:build-storybook
+```

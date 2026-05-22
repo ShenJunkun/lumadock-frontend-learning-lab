@@ -4,5 +4,5 @@
     "noEmit": true,
     "types": ["react"]
   },
-  "include": ["src"]
+  "include": [".storybook", "src"]
 }

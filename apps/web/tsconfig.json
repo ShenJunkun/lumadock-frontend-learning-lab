@@ -11,7 +11,7 @@
       "react/jsx-runtime": ["./node_modules/@types/react/jsx-runtime.d.ts"]
     },
     "noEmit": true,
-    "types": ["vite/client", "vitest/globals", "node"]
+    "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom", "node"]
   },
   "include": ["src", "../packages/ui/src", "vite.config.ts", "playwright.config.ts", "e2e"]
 }

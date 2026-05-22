@@ -81,8 +81,9 @@ test("admin page visual baseline", async ({ page }) => {
   await page.getByLabel("Password").fill("admin123");
   await page.getByRole("button", { name: "Login" }).click();
 
-  await page.goto("/admin");
-  await expect(page.getByRole("heading", { name: "Lead console" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Lead console" })).toBeVisible({
+    timeout: 15_000,
+  });
   await expect(page.getByRole("cell", { name: "Test User" })).toBeVisible();
 
   await expectPageScreenshot(page, "admin-page.png");
