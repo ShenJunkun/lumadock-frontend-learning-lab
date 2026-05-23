@@ -92,6 +92,61 @@ apps/web/src/pages/*
 
 一句话记忆：**`index.html` 提供容器，`main.tsx` 把 React 挂进去，`AppProviders` 准备全局环境，`App` 决定路由，`AppShell` 放公共布局，`pages` 渲染具体页面。**
 
+### JS 主线程和浏览器异步
+
+在浏览器里说的 **JS 主线程**，可以先理解成“负责执行页面 JavaScript 的那条主要执行线”。它不只运行你写的 JS，还会和浏览器的页面工作挤在同一条关键通道上：处理点击、输入、滚动、DOM 更新、样式计算、布局和绘制。主线程如果被一段同步代码长时间占住，页面就会表现为卡住：按钮点不动、滚动不响应、动画不更新。
+
+本项目的入口 `apps/web/src/main.tsx` 就运行在这个 JS 主线程上：
+
+```ts
+void enableMocking().then(() => {
+  ReactDOM.createRoot(document.getElementById("root")!).render(
+    <React.StrictMode>
+      <AppProviders />
+    </React.StrictMode>,
+  );
+  void registerPwaServiceWorker({ isProduction: import.meta.env.PROD });
+});
+```
+
+这段代码执行时，主线程会同步调用 `enableMocking()`，并注册 `.then(...)` 回调。`enableMocking()` 是 `async function`，所以它返回一个 Promise；真正的 React 挂载会等这个 Promise 完成后再执行。这样写不是让浏览器“停在这里等”，而是把等待交给浏览器和事件循环，主线程可以先空出来。
+
+浏览器和 JS 的配合可以按这个顺序看：
+
+```text
+JS 主线程执行 main.tsx
+  -> 调用 enableMocking()
+  -> 如果启用 MSW，浏览器异步加载 mock worker 文件
+  -> JS 注册 .then 回调后先结束当前这轮执行
+  -> mock worker 启动完成，Promise resolve
+  -> 浏览器把 .then 回调放回 JS 任务队列
+  -> JS 主线程执行回调，ReactDOM.render 挂载应用
+```
+
+前端大量使用异步，是因为浏览器里很多事情本质上都需要“等外部结果”：
+
+| 场景 | 为什么不能长期同步等待 | 本项目例子 |
+| --- | --- | --- |
+| 网络请求 | 后端响应可能几十毫秒到几秒不等，同步等待会卡住页面 | React Query 调用产品、登录、预约 API |
+| 动态加载模块 | 代码文件要从 dev server 或静态资源里取回来 | `await import("./mocks/browser")` |
+| Service Worker | 注册过程由浏览器后台处理，完成时间不确定 | `registerPwaServiceWorker(...)` |
+| 用户事件 | 点击、输入、滚动随时发生，不能被长任务阻塞 | 导航、表单、配置器交互 |
+| 动画和绘制 | 浏览器要按帧刷新界面，同步长任务会造成掉帧 | 首页动效和 3D 产品展示 |
+
+所以浏览器 API 常常不是直接返回最终结果，而是返回 Promise 或通过事件回调通知：
+
+```text
+fetch(...)                  -> Promise
+import("./mocks/browser")   -> Promise
+worker.start(...)           -> Promise
+serviceWorker.register(...) -> Promise
+button.addEventListener(...) -> 事件回调
+```
+
+这和 Java 后端里“一个请求按顺序查库、调接口、返回响应”的感觉不同。浏览器前端必须优先保护 UI 主线程，不让等待网络、加载文件、注册后台能力这些事情冻住页面。现代 JS 的 `async` / `await` 只是把 Promise 写得更像同步流程，但底层仍然是“发起异步任务，完成后再回到主线程继续执行”。
+
+一句话记忆：**JS 主线程负责让页面活着；异步让耗时等待离开主线程，完成后再把结果交回来。**
+
 核心概念可以按这个顺序掌握：
 
 | 概念 | 先理解什么 | 在本项目中看哪里 |
