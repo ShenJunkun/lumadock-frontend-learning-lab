@@ -228,6 +228,7 @@ main:focus {
   display: grid;
   gap: 24px;
   align-content: center;
+  min-width: 0;
 }
 
 .eyebrow {
@@ -239,7 +240,7 @@ main:focus {
 
 .hero-copy h1 {
   margin: 0;
-  font-size: clamp(4rem, 13vw, 8.5rem);
+  font-size: clamp(4rem, 9vw, 6rem);
   line-height: 0.92;
 }
 
