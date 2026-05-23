@@ -7,6 +7,29 @@
 - `BrowserRouter` 提供前端路由。
 - `src/App.tsx` 定义页面路由。
 
+本项目启动后的组件关系可以这样看：
+
+```text
+main.tsx
+  -> AppProviders
+       -> QueryClientProvider
+       -> ConfigProvider
+       -> BrowserRouter
+            -> App
+                 -> AppShell
+                      -> Routes / Page
+```
+
+`AppProviders` 引用 `App`，是为了在应用外层集中放置全局运行环境：React Query 缓存、Ant Design 主题和语言、`BrowserRouter` 等。`App` 再引用 `AppShell`，是为了把“路由定义”和“页面骨架”分开：`App` 负责决定不同 path 渲染哪个页面，`AppShell` 负责 header、nav、main、footer 这些稳定布局。
+
+这不是 Java 中常担心的循环依赖。当前依赖方向是单向的：
+
+```text
+AppProviders -> App -> AppShell
+```
+
+只要没有出现 `AppShell -> AppProviders` 或 `App -> AppProviders` 这样的反向 import，就不是循环模块依赖。可以把它理解成 Java 里 `main` 先创建一批外层上下文，再把真正的业务入口 `App` 放进去；而 `App` 内部再组合自己的布局和页面。
+
 ## React 先学概念
 
 React 的核心不是“在 HTML 里写很多标签”，而是用组件描述界面，然后让 React 根据状态变化更新 DOM。初学时建议先抓住这些概念：
