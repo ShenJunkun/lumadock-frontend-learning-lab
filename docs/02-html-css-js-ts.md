@@ -751,8 +751,9 @@ export function useProducts() {
 
 练习建议：
 
-1. 给 `Product` 增加一个 `availability` 字段。
-2. 在后端 schema、seed、前端卡片中同步使用它。
-3. 运行 `npm.cmd run web:typecheck`。
-4. 尝试给 `ProductCard` 增加一个 `aria-label`，观察 Testing Library 或 Playwright 是否更容易定位元素。
-5. 在 `global.css` 新增一个 CSS 变量，并在一个组件样式中用 `var(...)` 引用它。
+1. 先完成 `apps/web/src/exercises/js-ts/` 里的小练习，按该目录 `README.md` 的命令逐个运行 `.check.ts` 文件。
+2. 给 `Product` 增加一个 `availability` 字段。
+3. 在后端 schema、seed、前端卡片中同步使用它。
+4. 运行 `npm.cmd run web:typecheck`。
+5. 尝试给 `ProductCard` 增加一个 `aria-label`，观察 Testing Library 或 Playwright 是否更容易定位元素。
+6. 在 `global.css` 新增一个 CSS 变量，并在一个组件样式中用 `var(...)` 引用它。
