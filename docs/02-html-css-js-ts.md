@@ -274,6 +274,88 @@ import type { Product, Stats } from "./types";
 
 `import type` 只用于类型检查，编译到 JavaScript 后不会存在。这样可以避免把纯类型依赖变成运行时依赖。
 
+### 命名导出和默认导出
+
+命名导出和默认导出都是 JavaScript 的 ES Module 语法，不是 React 或 TypeScript 独有的能力。它们的共同点是：都把一个文件里的变量、函数、组件或类型暴露给其他文件使用。差别主要在“导入时怎么写”和“一个文件能导出几个”。
+
+命名导出写法如下：
+
+```ts
+export function AdminPage() {
+  return <div>Admin</div>;
+}
+```
+
+导入时必须使用花括号，并且名字要和导出的名字一致：
+
+```ts
+import { AdminPage } from "./pages/AdminPage";
+```
+
+一个模块可以有多个命名导出：
+
+```ts
+export function AdminPage() {}
+export function LoginPage() {}
+export const adminTitle = "Admin";
+```
+
+默认导出写法如下：
+
+```ts
+export default function AdminPage() {
+  return <div>Admin</div>;
+}
+```
+
+导入时不使用花括号，导入方可以自己命名：
+
+```ts
+import AdminPage from "./pages/AdminPage";
+import AnyName from "./pages/AdminPage";
+```
+
+一个模块只能有一个默认导出。它通常表示“这个文件最主要导出的东西”。页面组件、主类、主函数这类单一主体适合使用默认导出；工具函数集合、类型集合、多个同级组件则更适合命名导出。
+
+对比表：
+
+| 导出方式 | 导出写法 | 导入写法 | 数量限制 | 适合场景 |
+| --- | --- | --- | --- | --- |
+| 命名导出 | `export function AdminPage() {}` | `import { AdminPage } from "./pages/AdminPage"` | 一个文件可以有多个 | 多个工具函数、类型、组件并列导出 |
+| 默认导出 | `export default AdminPage` | `import AdminPage from "./pages/AdminPage"` | 一个文件只能有一个 | 一个文件只有一个主要组件或主函数 |
+
+本项目页面通常使用命名导出，例如 `AdminPage.tsx` 中暴露 `AdminPage`。普通同步导入时可以直接写：
+
+```ts
+import { AdminPage } from "./pages/AdminPage";
+```
+
+但 `React.lazy` 的接口约定要求动态导入最终得到一个带 `default` 字段的对象：
+
+```ts
+const AdminPage = lazy(() =>
+  import("./pages/AdminPage").then((module) => ({ default: module.AdminPage })),
+);
+```
+
+这里的 `module` 是动态 `import()` 加载后的模块对象，`module.AdminPage` 表示读取命名导出的 `AdminPage`。`({ default: module.AdminPage })` 则是把命名导出手动包装成 `React.lazy` 期待的默认导出形状。它的含义不是“改掉源文件的导出方式”，而是“在懒加载这一处，把 `AdminPage` 当作默认组件交给 React”。
+
+如果源文件本身改成默认导出：
+
+```ts
+export default function AdminPage() {
+  return <div>Admin</div>;
+}
+```
+
+那么懒加载可以简化为：
+
+```ts
+const AdminPage = lazy(() => import("./pages/AdminPage"));
+```
+
+一句话记忆：**命名导出是按名字拿东西，默认导出是拿这个文件的主东西；`React.lazy` 只认最终对象里的 `default`。**
+
 ## JavaScript 常用语法
 
 ### `const`、`let` 和不可变思路
