@@ -73,7 +73,7 @@ test: add frontend and backend coverage
 docs: complete project tutorial and runbook
 ```
 
-本项目独立在 `D:\code\frontend-learning-product-lab`，不要提交到 RadarAgent。
+本项目独立在 `D:\code\frontend-learning-product-lab`，提交前确认目标仓库和当前分支。
 
 ## 代码规范
 
