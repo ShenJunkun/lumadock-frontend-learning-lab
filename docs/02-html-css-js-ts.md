@@ -49,6 +49,49 @@
   -> React 把组件树渲染到 root 节点里
 ```
 
+把它对应到项目文件，就是这条更完整的链路：
+
+```text
+apps/web/index.html
+  -> <div id="root"></div>
+  -> <script type="module" src="/src/main.tsx"></script>
+
+apps/web/src/main.tsx
+  -> import 全局 CSS、i18n、PWA 注册逻辑
+  -> 可选启动 MSW mock
+  -> ReactDOM.createRoot(document.getElementById("root")!)
+  -> render(<React.StrictMode><AppProviders /></React.StrictMode>)
+
+apps/web/src/components/AppProviders.tsx
+  -> QueryClientProvider 提供 React Query 缓存
+  -> ConfigProvider 提供 Ant Design 主题和语言
+  -> AntdRuntimeApp 提供 Ant Design message / modal 等运行时能力
+  -> BrowserRouter 提供前端路由上下文
+  -> 渲染 <App />
+
+apps/web/src/App.tsx
+  -> 读取当前 location
+  -> 渲染 <AppShell>
+  -> 放入路由元数据、telemetry、ErrorBoundary、Suspense
+  -> 用 <Routes> / <Route> 定义每个 path 对应的页面
+
+apps/web/src/components/AppShell.tsx
+  -> 渲染 header、导航、main、footer
+  -> 把 App.tsx 传入的 children 放进 <main>
+
+apps/web/src/pages/*
+  -> 具体页面组件，例如 HomePage、CatalogPage、ProductDetailPage
+```
+
+所以可以按两条线理解：
+
+| 线索 | 关注点 | 对应文件 |
+| --- | --- | --- |
+| 浏览器加载线 | HTML 入口、Vite 模块加载、React 挂载到 `#root` | `index.html`、`main.tsx` |
+| React 组件线 | Provider 外层环境、路由入口、布局骨架、具体页面 | `AppProviders.tsx`、`App.tsx`、`AppShell.tsx`、`pages/` |
+
+一句话记忆：**`index.html` 提供容器，`main.tsx` 把 React 挂进去，`AppProviders` 准备全局环境，`App` 决定路由，`AppShell` 放公共布局，`pages` 渲染具体页面。**
+
 核心概念可以按这个顺序掌握：
 
 | 概念 | 先理解什么 | 在本项目中看哪里 |
