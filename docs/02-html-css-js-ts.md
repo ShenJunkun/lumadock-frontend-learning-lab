@@ -35,6 +35,64 @@
 
 这里没有直接写大量页面 HTML，是因为本项目采用 React。静态入口只负责准备容器，真实页面由 `apps/web/src/main.tsx` 和后续组件生成。
 
+### 先理解这条启动链路
+
+学习 Vite、React 和 ES Module 时，先不要把它们混成一个概念。它们在启动页面时各自负责一段：
+
+```text
+浏览器打开 index.html
+  -> 看到 <script type="module" src="/src/main.tsx">
+  -> 向 Vite 开发服务器请求 /src/main.tsx
+  -> Vite 读取 main.tsx 里的 import
+  -> Vite 转换 TS / TSX / CSS 等浏览器不能直接处理的内容
+  -> ReactDOM 找到 <div id="root"></div>
+  -> React 把组件树渲染到 root 节点里
+```
+
+核心概念可以按这个顺序掌握：
+
+| 概念 | 先理解什么 | 在本项目中看哪里 |
+| --- | --- | --- |
+| 浏览器入口 | 浏览器最先拿到的是 HTML，不是 React 组件 | `apps/web/index.html` |
+| DOM 节点 | `<div id="root"></div>` 是真实页面里的容器 | `apps/web/index.html` |
+| React 挂载 | `createRoot(...).render(...)` 让 React 接管某个 DOM 容器 | `apps/web/src/main.tsx` |
+| 组件树 | 页面不是一整块字符串，而是由组件嵌套出来的树 | `AppProviders`、`App.tsx`、`pages/` |
+| Vite dev server | 开发时帮浏览器找到源码、转换源码、处理热更新 | `npm.cmd run web:dev` |
+| ES Module | `import` / `export` 让一个文件引用另一个文件 | `main.tsx` 的导入语句 |
+| 模块图 | Vite 会从入口文件顺着每个 `import` 找到所有依赖 | 从 `main.tsx` 到组件、CSS、路由页面 |
+
+一句话记忆：**Vite 负责把源码喂给浏览器，React 负责把组件变成界面，ES Module 负责把拆散的文件连接起来。**
+
+### Vite、React 和 ES Module 的关系
+
+React 是运行在浏览器里的 UI 库。你写的组件、props、state、事件处理，主要都属于 React 的学习范围。
+
+Vite 是开发和构建工具。开发时它像一个本地服务器，浏览器请求 `/src/main.tsx` 时，Vite 会把 TypeScript、TSX、CSS import、第三方依赖等处理成浏览器能执行的模块。生产构建时，Vite 会调用底层打包能力，把模块整理成 `dist/` 里的静态文件。
+
+ES Module 是 JavaScript 官方模块系统，也就是：
+
+```ts
+import React from "react";
+import { AppProviders } from "./components/AppProviders";
+
+export function Example() {
+  return null;
+}
+```
+
+它关心的是“文件和文件之间怎么引用”。浏览器原生支持 `<script type="module">`，Vite 正是利用这个入口，在开发时按需转换和发送模块。普通 `<script>` 不能直接使用这种模块导入方式。
+
+初学时容易混淆的边界：
+
+| 问题 | 归谁管 |
+| --- | --- |
+| 组件怎么写、状态怎么更新、点击后怎么重新渲染 | React |
+| `import` / `export` 的语法和文件依赖关系 | ES Module |
+| `.tsx` 怎么在浏览器运行、CSS import 怎么生效、保存后为什么自动刷新 | Vite |
+| 最终页面插入到哪里 | `index.html` 的 `#root` + ReactDOM |
+
+真正要背的不是工具名，而是这条边界：**React 不负责启动开发服务器，Vite 不负责决定组件状态，ES Module 不负责渲染页面。**
+
 ## CSS 学习点
 
 `apps/web/src/styles/global.css` 覆盖全局设计变量和复杂产品视觉，Tailwind 负责局部布局、间距和响应式工具类。两者分工如下：

@@ -7,6 +7,34 @@
 - `BrowserRouter` 提供前端路由。
 - `src/App.tsx` 定义页面路由。
 
+## React 先学概念
+
+React 的核心不是“在 HTML 里写很多标签”，而是用组件描述界面，然后让 React 根据状态变化更新 DOM。初学时建议先抓住这些概念：
+
+| 概念 | 先理解什么 | 本项目例子 |
+| --- | --- | --- |
+| 组件 | 一个返回 TSX 的函数，就是一块可复用界面 | `ProductCard`、`LeadForm`、`AppShell` |
+| props | 父组件传给子组件的数据和回调 | `ProductCard product={product}` |
+| state | 组件或页面内部会变化的数据 | 配置器里的颜色、刻字、数量选择 |
+| render | state 或 props 变化后，React 重新计算界面应该长什么样 | 点击配置按钮后选中态变化 |
+| 条件渲染 | 根据状态决定显示哪个组件 | loading、error、empty、success 状态 |
+| 列表渲染 | 用 `.map()` 把数组变成一组组件 | 产品卡片列表 |
+| key | 帮 React 稳定识别列表里的每一项 | `key={product.id}` |
+| 事件处理 | 用 `onClick`、`onSubmit` 等响应用户操作 | 配置按钮、预约表单 |
+| hook | 在函数组件里使用 React 能力和外部状态能力 | `useState`、`useMemo`、React Query hook |
+| 组件树 | 大组件包含小组件，最终形成页面结构 | `AppProviders` -> `App` -> `Page` -> `Component` |
+
+读 React 代码时可以按这个顺序问：
+
+1. 这个文件导出了哪个组件？
+2. 这个组件接收哪些 props？
+3. 它自己维护哪些 state？
+4. 它根据哪些条件渲染不同 UI？
+5. 用户操作会调用哪些事件函数？
+6. 它还组合了哪些子组件？
+
+把这六个问题问清楚，一个 React 组件通常就能读懂大半。
+
 ## 页面
 
 - `/` 首页：Hero、滚动出现、3D 产品展示、产品卡片。
