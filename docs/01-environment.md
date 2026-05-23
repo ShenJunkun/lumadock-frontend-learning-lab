@@ -30,6 +30,35 @@ conda run -n frontend-product-lab python -m pip install -r apps/api/requirements
 
 因此 `npm.cmd run api:dev` 只是通过根目录 workspace 脚本启动 Python 后端，后端业务代码仍然在 `apps/api/app` 下，不和前端页面代码混写。
 
+### 多个 package.json 的关系
+
+这个项目使用的是 JavaScript / TypeScript / Node.js 生态里常见的 monorepo + npm workspaces 管理方式。monorepo 的意思是：一个 Git 仓库里同时放多个应用和共享包；npm workspaces 的作用是：让 npm 能识别这些子目录里的包，并在根目录统一安装依赖、统一执行脚本。
+
+当前仓库的关系是：
+
+```text
+根目录 package.json
+  ├─ apps/web/package.json             前端应用 @lumadock/web
+  ├─ apps/api/package.json             后端服务 @lumadock/api 的 npm 启动壳
+  ├─ packages/ui/package.json          共享 UI 组件包 @lumadock/ui
+  └─ packages/api-client/package.json  共享 API client 包 @lumadock/api-client
+```
+
+根目录 `package.json` 是总入口，核心职责有三个：
+
+- 用 `workspaces` 声明哪些目录属于这个 monorepo。
+- 用聚合脚本把命令转发到对应子包，例如 `api:dev`、`web:dev`、`ui:typecheck`。
+- 放少量跨项目共用的开发依赖和 Node 版本要求。
+
+各子目录的 `package.json` 是自己的局部说明书：
+
+- `apps/web/package.json` 描述 Vite + React 前端应用，包含 `vite`、`react`、测试、构建、lint 等前端依赖和脚本。
+- `apps/api/package.json` 不是说后端由 Node.js 实现，它只是把 Python 后端的启动和测试命令接入 npm workspace。真正的后端代码仍然是 `apps/api/app` 下的 FastAPI，Python 依赖仍然在 `apps/api/requirements.txt` 和 `apps/api/pyproject.toml` 里。
+- `packages/ui/package.json` 描述共享 UI 组件包，前端应用可以通过 `@lumadock/ui` 引用它。
+- `packages/api-client/package.json` 描述共享 API client 和类型契约，前端应用可以通过 `@lumadock/api-client` 调用后端接口。
+
+所以多个 `package.json` 不是互相冲突的重复文件，而是一个总入口加多个子包说明。根目录负责“调度全局”，子包负责“管理自己”。
+
 ### 为什么根目录命令能启动服务
 
 Windows 下执行的是 `npm.cmd`，它是 Node.js 安装时提供给 PowerShell/cmd 使用的 npm 命令入口。执行 `npm.cmd run <script>` 时，npm 会读取当前目录的 `package.json`，找到同名脚本并执行。
