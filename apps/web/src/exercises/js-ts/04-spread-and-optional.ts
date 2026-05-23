@@ -12,7 +12,7 @@ export type ProductDetail = {
   };
 };
 
-function todo<T>(): T {
+function todo<T>(..._values: unknown[]): T {
   throw new Error("TODO: finish this exercise.");
 }
 
@@ -22,18 +22,18 @@ export function buildJsonHeaders(options?: RequestOptions) {
   // Always include "Content-Type": "application/json".
   // If options.token exists, include Authorization: "Bearer <token>".
   // Merge options.headers last so caller headers can override defaults.
-  return todo<Record<string, string>>();
+  return todo<Record<string, string>>(options);
 }
 
 export function readPorts(product?: ProductDetail) {
   // TODO:
   // Use optional chaining and nullish coalescing.
   // Return product.specs.ports when present; otherwise return "Not listed".
-  return todo<string>();
+  return todo<string>(product);
 }
 
 export function withUpdatedName(product: ProductDetail, name: string) {
   // TODO:
   // Return a new object with all existing product fields and the updated name.
-  return todo<ProductDetail>();
+  return todo<ProductDetail>(product, name);
 }

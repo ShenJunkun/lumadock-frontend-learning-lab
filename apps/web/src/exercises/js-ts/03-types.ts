@@ -8,7 +8,7 @@ export type LeadDraft = {
 
 export type Configuration = Record<string, unknown>;
 
-function todo<T>(): T {
+function todo<T>(..._values: unknown[]): T {
   throw new Error("TODO: finish this exercise.");
 }
 
@@ -16,7 +16,7 @@ export function parseRole(input: string): UserRole {
   // TODO:
   // Return input when it is "admin" or "viewer".
   // Otherwise return "viewer".
-  return todo<UserRole>();
+  return todo<UserRole>(input);
 }
 
 export function describeLead(draft: LeadDraft) {
@@ -24,7 +24,7 @@ export function describeLead(draft: LeadDraft) {
   // Return "<company> wants <productId>".
   // If company is missing, use "Unknown company".
   // If productId is null, use "no product yet".
-  return todo<string>();
+  return todo<string>(draft);
 }
 
 export function readStringConfig(configuration: Configuration, key: string) {
@@ -32,5 +32,5 @@ export function readStringConfig(configuration: Configuration, key: string) {
   // Read configuration[key].
   // Return it only if it is a string.
   // Otherwise return undefined.
-  return todo<string | undefined>();
+  return todo<string | undefined>(configuration, key);
 }
