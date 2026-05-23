@@ -50,17 +50,32 @@ npm.cmd install
 
 ## 开发运行
 
+这两个命令需要在仓库根目录执行。根目录 `package.json` 通过 npm workspaces 把命令分发给对应子项目：
+
+- `npm.cmd run api:dev` -> 根脚本 `api:dev` -> `npm --workspace @lumadock/api run dev` -> `apps/api/package.json` 的 `dev` 脚本。
+- `npm.cmd run web:dev` -> 根脚本 `web:dev` -> `npm --workspace @lumadock/web run dev` -> `apps/web/package.json` 的 `dev` 脚本。
+
 后端：
 
 ```powershell
 npm.cmd run api:dev
 ```
 
+后端 workspace 的 `dev` 脚本会执行：
+
+```powershell
+conda run -n frontend-product-lab uvicorn app.main:app --app-dir . --reload --host 127.0.0.1 --port 8001
+```
+
+也就是用 `frontend-product-lab` 这个 conda 环境启动 Uvicorn。Uvicorn 会导入 `apps/api/app/main.py` 里的 `app` 这个 FastAPI 实例，初始化 SQLite 数据库和种子数据，然后在 `http://127.0.0.1:8001` 提供 REST API。
+
 前端：
 
 ```powershell
 npm.cmd run web:dev
 ```
+
+前端 workspace 的 `dev` 脚本会执行 `vite --host 127.0.0.1 --port 5173`。Vite 读取 `apps/web/vite.config.ts`、`apps/web/index.html` 和 `apps/web/src/main.tsx`，启动 React 开发服务器，并通过 `apps/web/.env.development` 里的 `VITE_API_BASE_URL=http://127.0.0.1:8001` 调用本地后端。
 
 前端 API 地址和 Mock 开关来自 `apps/web/.env.*`：
 
