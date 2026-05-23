@@ -29,10 +29,10 @@ $env:RUN_EXERCISES='true'; npm.cmd --workspace @lumadock/web exec vitest run src
 
 ## 练习目标
 
-| 文件 | 练习点 |
-| --- | --- |
-| `01-modules.ts` | `export`、命名导出、类型导出、模板字符串、字符串处理 |
-| `02-js-basics.ts` | `const`、数组 `.map()` / `.filter()`、三元表达式、模板字符串 |
-| `03-types.ts` | `type`、联合类型、可选字段、`null`、`Record<string, unknown>` |
-| `04-spread-and-optional.ts` | 对象展开、可选链 `?.`、空值合并 `??` |
-| `05-async.ts` | `async` / `await`、`Promise<T>`、泛型、错误 fallback |
+| 文件                        | 练习点                                                        |
+| --------------------------- | ------------------------------------------------------------- |
+| `01-modules.ts`             | `export`、命名导出、类型导出、模板字符串、字符串处理          |
+| `02-js-basics.ts`           | `const`、数组 `.map()` / `.filter()`、三元表达式、模板字符串  |
+| `03-types.ts`               | `type`、联合类型、可选字段、`null`、`Record<string, unknown>` |
+| `04-spread-and-optional.ts` | 对象展开、可选链 `?.`、空值合并 `??`                          |
+| `05-async.ts`               | `async` / `await`、`Promise<T>`、泛型、错误 fallback          |
