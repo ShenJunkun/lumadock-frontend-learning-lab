@@ -15,6 +15,7 @@
 9. 权限认证：JWT 登录、localStorage token、路由守卫、admin/viewer 角色。
 10. 测试：Vitest、Testing Library、Playwright、pytest。
 11. 构建与提交：lint、format、typecheck、test、build、git commit。
+12. 技术选型：理解 React Web、React Native、Vue3、uni-app、Flutter 和全栈路线的取舍，见 [13 技术选型对比](13-technology-choices.md)。
 
 ## 项目边界
 

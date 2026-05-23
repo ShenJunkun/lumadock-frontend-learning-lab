@@ -130,4 +130,4 @@ docker compose up --build
 
 ## 学习路线
 
-从 [docs/00-roadmap.md](docs/00-roadmap.md) 开始。已完成/待完成能力清单见 [docs/99-missing-modules.md](docs/99-missing-modules.md)。
+从 [docs/00-roadmap.md](docs/00-roadmap.md) 开始。技术路线和 React Web / React Native / uni-app / Flutter 的区别见 [docs/13-technology-choices.md](docs/13-technology-choices.md)。已完成/待完成能力清单见 [docs/99-missing-modules.md](docs/99-missing-modules.md)。
