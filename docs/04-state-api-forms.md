@@ -102,6 +102,78 @@ index.html
 
 `AppProviders` 不是普通页面组件，它负责让整棵组件树拥有“全局能力”。
 
+### Provider 层级如何理解
+
+`AppProviders` 最后返回的是一组嵌套的 Provider：
+
+```tsx
+return (
+  <QueryClientProvider client={queryClient}>
+    <ConfigProvider
+      locale={language === "zh" ? zhCN : enUS}
+      theme={createAntdTheme(resolvedTheme)}
+    >
+      <AntdRuntimeApp>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </AntdRuntimeApp>
+    </ConfigProvider>
+  </QueryClientProvider>
+);
+```
+
+可以把它看成：
+
+```text
+QueryClientProvider
+  ConfigProvider
+    AntdRuntimeApp
+      BrowserRouter
+        App
+```
+
+最里面的 `App` 才是真正的页面应用；外面的每一层都在给里面的组件提供一种全局能力。
+
+| 层级 | 提供什么能力 | 为什么要包住 `App` |
+| --- | --- | --- |
+| `QueryClientProvider` | React Query 的请求缓存、重试、mutation、query client 上下文 | 页面里的 `useQuery` / `useMutation` 需要访问同一个 `queryClient` |
+| `ConfigProvider` | Ant Design 的语言包、主题 token、组件全局配置 | 所有 Ant Design 组件都要按当前语言和明暗主题渲染 |
+| `AntdRuntimeApp` | Ant Design message、modal、notification 等反馈组件的运行上下文 | 项目里可以使用 `message.success(...)` 这类全局反馈 |
+| `BrowserRouter` | React Router 的浏览器路由上下文 | `App` 和页面组件需要使用路由、链接、跳转、当前位置 |
+| `App` | 项目自己的主应用、路由结构和页面内容 | 真正被渲染的业务 UI |
+
+这些层级由“作用范围”决定：谁要给一批子组件提供能力，谁就包在那批组件外面。如果只包住某个页面，能力就只在那个页面内可用；如果包住整个 `App`，全站都能用。
+
+有些 Provider 的顺序不是绝对的。例如很多场景下 `QueryClientProvider` 和 `BrowserRouter` 对调也能工作，因为它们互相不直接依赖。但项目会选择一个稳定、好理解的顺序：
+
+```text
+数据请求环境
+  -> UI 语言和主题环境
+    -> Ant Design 全局反馈环境
+      -> 路由环境
+        -> 页面应用
+```
+
+`ConfigProvider` 包在 `AntdRuntimeApp` 外面，是为了让 Ant Design 的运行时反馈组件和普通组件都能拿到同一套语言和主题配置。
+
+这一段里的两个 prop 也很典型：
+
+```tsx
+locale={language === "zh" ? zhCN : enUS}
+theme={createAntdTheme(resolvedTheme)}
+```
+
+`locale={...}` 里用了三元表达式：如果当前语言是中文，就给 Ant Design 传 `zhCN`；否则传 `enUS`。`theme={...}` 则根据 `resolvedTheme` 生成 Ant Design 能理解的主题配置。
+
+相关官方文档：
+
+- [React Context：深入传递数据](https://zh-hans.react.dev/learn/passing-data-deeply-with-context)：Provider / Context 的基础思想。
+- [TanStack Query QueryClientProvider](https://tanstack.com/query/latest/docs/framework/react/reference/QueryClientProvider)：React Query Provider 的作用。
+- [Ant Design ConfigProvider](https://ant.design/components/config-provider-cn)：Ant Design 全局配置、语言和主题入口。
+- [Ant Design App 包裹组件](https://ant.design/components/app-cn)：message、modal、notification 等全局反馈的上下文。
+- [React Router BrowserRouter](https://reactrouter.com/api/declarative-routers/BrowserRouter)：浏览器路由 Provider。
+
 ## 局部变量与局部状态
 
 React 组件本质上是函数。函数内部普通变量每次渲染都会重新计算：
