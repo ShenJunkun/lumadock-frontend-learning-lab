@@ -151,6 +151,7 @@
 - `apps/web/src/theme/antdTheme.ts`
 - `packages/ui/src/designTokens.ts`
 - `docs/08-p3-architecture.md`
+- `docs/15-antd-components.md`
 
 重点问题：
 
