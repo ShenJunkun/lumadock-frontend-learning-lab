@@ -292,17 +292,30 @@ React Query 和 Zustand 的区别：
 3. 同时更新 React / Zustand 状态。
 4. 组件订阅状态，而不是到处直接读 storage。
 
-当前项目使用：
+常见浏览器存储方式的区别：
 
-- `localStorage` 保存登录 session。
-- `localStorage` 保存语言和主题偏好。
-- `sessionStorage` 保存预约草稿。
+| 方式 | 适合什么 | 和本项目的关系 |
+| --- | --- | --- |
+| Cookie / `document.cookie` | 小容量数据；浏览器会按域名、路径、过期时间等规则随请求自动发送；服务端可以设置 `HttpOnly` Cookie，让前端 JS 读不到 | 当前项目没有用 `document.cookie` 做业务存储。登录采用的是前端保存 token，再由 API client 放进 `Authorization` 请求头 |
+| `localStorage` | 同源长期保存；关闭浏览器后还在；多个同源标签页可共享；只能存字符串 | 当前项目用它保存登录 session、语言和主题偏好 |
+| `sessionStorage` | 当前标签页临时保存；刷新页面后还在，关闭标签页后清掉；只能存字符串 | 当前项目用它保存预约表单草稿 |
+| IndexedDB | 异步浏览器数据库；容量更大；可以存结构化对象、Blob 和更复杂的离线数据 | 当前项目没有使用。以后如果要做大量离线数据、复杂缓存或本地队列，可以考虑它 |
+| Cache Storage | Service Worker 使用的请求/响应缓存；常用于 PWA 离线资源，不适合当业务数据表 | 当前项目的 `public/sw.js` 用它缓存离线页面、manifest 和 hero 图片资源 |
+
+当前项目的具体落点：
+
+- `authStore` 用 `localStorage` 保存 `lumadock.auth`，登录成功时写入 token 和用户信息，退出登录时清理。
+- `preferencesStore` 用 `localStorage` 保存 `lumadock.language` 和 `lumadock.theme`，再由 `AppProviders` 把语言、主题同步到 i18n、Ant Design 和 DOM。
+- `bookingDrafts` 用 `sessionStorage` 保存 `lumadock.bookingDraft:<productId>`，让预约表单在当前标签页刷新后能恢复草稿，提交成功后再清理。
+- `sw.js` 用 `caches` 保存静态资源和离线页，这是 PWA 资源缓存，不是用户业务数据。
 
 一般判断：
 
 - 跨浏览器标签页、长期保留：考虑 `localStorage`。
 - 当前标签页临时保留，关闭后可丢失：考虑 `sessionStorage`。
 - 只在当前组件活着时有意义：不要进 storage。
+- 需要浏览器自动随请求发送、并希望服务端控制会话：考虑 Cookie，生产登录常见做法是服务端 session 或刷新 token 配合 `HttpOnly` Cookie，但要同时设计 CSRF 防护。
+- 数据量大、结构复杂、需要离线队列或本地数据库能力：考虑 IndexedDB。
 
 ## 环境变量：部署配置
 
