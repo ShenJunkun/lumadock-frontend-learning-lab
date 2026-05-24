@@ -334,6 +334,107 @@ const language = usePreferencesStore((state) => state.language);
 const themeMode = usePreferencesStore((state) => state.themeMode);
 ```
 
+### Zustand 订阅和 useEffect 的先后关系
+
+Zustand 和 `useEffect` 都可能让人想到“订阅”，但它们订阅的对象不同：
+
+| 机制 | 订阅谁 | 谁触发 | 目的 |
+| --- | --- | --- | --- |
+| Zustand selector | Zustand store 的状态片段 | `set(...)` 更新 store | 让组件拿到新状态并重新渲染 |
+| `useEffect` 依赖数组 | 本次渲染里用到的依赖值 | React 渲染后比较依赖变化 | 在渲染完成后执行副作用 |
+| `useEffect` 里的事件监听 | 浏览器、DOM、WebSocket、第三方库等外部系统 | 外部事件发生 | 把外部系统变化接进 React / store |
+| `useEffect` cleanup | 上一次 effect 注册的外部资源 | 组件卸载或 effect 重跑前 | 移除监听器、定时器、连接等资源 |
+
+所以这句不是 `useEffect` 在订阅 Zustand：
+
+```tsx
+useEffect(() => {
+  void i18n.changeLanguage(language);
+}, [language]);
+```
+
+真正订阅 Zustand 的是：
+
+```tsx
+const language = usePreferencesStore((state) => state.language);
+```
+
+`[language]` 只是告诉 React：“这个 effect 用到了 `language`，如果下一次渲染时 `language` 和上一次不同，渲染提交后再执行这个 effect。”
+
+语言切换的顺序是：
+
+```text
+用户切换语言
+  -> setLanguage("zh")
+  -> Zustand 更新 language
+  -> Zustand 通知订阅 language 的组件
+  -> AppProviders 重新渲染并拿到新 language
+  -> React 提交这次渲染
+  -> useEffect 发现 [language] 变了
+  -> i18n.changeLanguage("zh")
+```
+
+这类场景里，Zustand 状态更新在前，`useEffect` 在渲染后执行。
+
+主题应用也是同样的顺序：
+
+```text
+Zustand 更新 resolvedTheme
+  -> AppProviders 重新渲染
+  -> React 提交渲染
+  -> useEffect 发现 [resolvedTheme] 变了
+  -> applyDocumentTheme(resolvedTheme)
+  -> html 上的 data-theme、dark class、color-scheme 被更新
+```
+
+第三个 effect 更像一座桥，它先安装浏览器监听器：
+
+```tsx
+useEffect(() => {
+  if (themeMode !== "system") {
+    return;
+  }
+
+  const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  mediaQuery.addEventListener("change", refreshResolvedTheme);
+  return () => mediaQuery.removeEventListener("change", refreshResolvedTheme);
+}, [refreshResolvedTheme, themeMode]);
+```
+
+第一次进入 `system` 模式时：
+
+```text
+AppProviders 渲染，themeMode 是 "system"
+  -> React 提交渲染
+  -> useEffect 执行
+  -> 注册 mediaQuery change 监听器
+```
+
+之后操作系统主题变化时：
+
+```text
+操作系统深浅色变化
+  -> 浏览器触发 mediaQuery change 事件
+  -> refreshResolvedTheme()
+  -> Zustand 更新 resolvedTheme
+  -> 订阅 resolvedTheme 的组件重新渲染
+  -> applyDocumentTheme 的 effect 再把新主题同步到 DOM
+```
+
+因此可以这样记：
+
+- 如果 effect 依赖 Zustand 状态，比如 `[language]`、`[resolvedTheme]`，通常是 Zustand 更新在前，React 渲染在中间，effect 在后。
+- 如果 effect 注册外部监听器，比如 `mediaQuery.addEventListener(...)`，则是 effect 先把外部事件接进来；以后外部事件发生时，再推动 Zustand 更新。
+
+相关学习资料：
+
+- [React useEffect 中文文档](https://zh-hans.react.dev/reference/react/useEffect)：官方 API 说明，重点看依赖数组和 cleanup。
+- [使用 Effect 进行同步](https://zh-hans.react.dev/learn/synchronizing-with-effects)：React 官方教程，解释 effect 为什么是“和外部系统同步”。
+- [你可能不需要 Effect](https://zh-hans.react.dev/learn/you-might-not-need-an-effect)：React 官方教程，解释哪些逻辑应该在渲染或事件处理里完成，而不是写进 effect。
+- [React useSyncExternalStore 中文文档](https://zh-hans.react.dev/reference/react/useSyncExternalStore)：React 官方说明外部 store 如何接入 React 渲染。
+- [Zustand useStore](https://zustand.docs.pmnd.rs/reference/hooks/use-store)：Zustand 官方说明 selector 如何从 store 里选择状态。
+- [Zustand create API](https://zustand.docs.pmnd.rs/apis/create)：Zustand 官方说明 `create(...)` 如何创建 store hook。
+
 ### 配置器状态
 
 `configuratorStore` 保存这些用户选择：
