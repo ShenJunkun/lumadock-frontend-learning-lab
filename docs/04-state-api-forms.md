@@ -176,6 +176,53 @@ export type FinishId = (typeof finishOptions)[number]["id"];
 - `preferencesStore.ts`：语言、主题和系统主题解析结果。
 - `authStore.ts`：登录 token、用户信息和认证状态。
 
+### Zustand 是什么
+
+Zustand 是一个第三方 React 状态管理库，不是 React 官方提供的库。React 官方提供的是 `useState`、`useReducer`、`useContext`、`useSyncExternalStore` 这些基础能力；Zustand 在这些能力之上，提供了更轻量的全局 store 写法。
+
+它的特点是：
+
+- 不需要像 Redux 传统写法那样手写 action type、reducer、dispatch 流程。
+- 不需要在组件树顶层额外包一个 Provider 才能使用 store。
+- 组件可以用 selector 只订阅自己关心的状态片段。
+- store 可以放状态，也可以放修改状态的方法。
+- API 很小，适合教学项目、中小型应用和很多业务后台。
+
+Zustand 在 React 生态里使用很多。判断“是否大量使用”可以看 npm 下载量、GitHub 活跃度、社区文章和公司项目案例。不过下载量只能代表生态热度，不等于每个项目都应该用它。本项目选择 Zustand，是因为它足够直观：文件少、样板代码少，很适合学习“客户端全局状态”的核心概念。
+
+常见替代方案：
+
+| 方案 | 更适合什么 | 和 Zustand 的区别 |
+| --- | --- | --- |
+| React `useState` / `useReducer` | 组件内部状态、局部交互 | 官方内置，最简单；但跨很多组件共享会变麻烦 |
+| React Context | 主题、语言、当前用户这类低频变化的全局值 | 官方内置；频繁变化或大对象容易造成较多重渲染，需要额外拆分和优化 |
+| Redux Toolkit | 大型应用、复杂状态流、强调可追踪 action、团队规范和 DevTools | 更成熟、更规范、生态很大；写法和概念比 Zustand 重一些 |
+| Zustand | 中小型到较大型客户端状态、配置器、登录态、偏好设置 | 简洁、上手快、selector 订阅直接；复杂团队规范需要自己约定 |
+| Jotai | 原子化状态，很多小状态彼此组合 | 状态模型是 atom，不是单一 store；细粒度强，但思维方式不同 |
+| Valtio | 喜欢直接修改代理对象的写法 | 基于 Proxy，写法接近“直接改对象”；调试和团队约束风格不同 |
+| MobX | 复杂可观察对象模型、面向对象风格状态 | 响应式能力强；需要理解 observable、action、computed 等概念 |
+| XState | 明确状态机、复杂流程、状态跳转非常严格的业务 | 不是普通 store，而是状态机/状态图；适合流程复杂但学习成本更高 |
+| React Query / TanStack Query | 服务端数据：请求、缓存、重试、失效、mutation | 不应该拿它替代 Zustand。它管 API 数据，Zustand 管客户端状态 |
+
+本项目的判断方式是：
+
+- 来自 API 的产品列表、详情、后台 leads：用 React Query。
+- 用户当前选择的产品配置、语言、主题、登录状态：用 Zustand。
+- 只在一个组件里短暂存在的输入和开关：用 `useState` / `useReducer`。
+- 表单当前输入：优先交给 React Hook Form。
+
+相关官方文档入口：
+
+- [React 管理状态](https://zh-hans.react.dev/learn/managing-state)：React 官方的状态管理基础，包括 state、props、状态提升等。
+- [React useContext](https://zh-hans.react.dev/reference/react/useContext)：React 官方 Context Hook。
+- [Zustand Docs](https://zustand.docs.pmnd.rs/)：Zustand 官方文档。
+- [Redux Toolkit](https://redux-toolkit.js.org/)：Redux 官方推荐的现代 Redux 写法。
+- [TanStack Query](https://zh-hans.tanstack.dev/query/latest/docs/framework/react/overview)：服务端状态、请求缓存和 mutation。
+- [Jotai Docs](https://jotai.org/docs)：原子化状态管理。
+- [Valtio Docs](https://valtio.dev/)：Proxy 风格状态管理。
+- [MobX Docs](https://mobx.js.org/README.html)：observable 风格状态管理。
+- [XState Docs](https://stately.ai/docs)：状态机、状态图和 actor 模型。
+
 Zustand 的基本结构是：
 
 ```tsx
@@ -200,6 +247,92 @@ const setFinish = useConfiguratorStore((state) => state.setFinish);
 ```
 
 selector 的好处是：组件只订阅自己关心的字段。`finish` 变化时，读取 `finish` 的组件会更新；无关字段变化时，组件不需要跟着重渲染。
+
+### selector 和订阅机制
+
+以 `AppProviders` 里的偏好读取为例：
+
+```tsx
+const language = usePreferencesStore((state) => state.language);
+const resolvedTheme = usePreferencesStore((state) => state.resolvedTheme);
+const themeMode = usePreferencesStore((state) => state.themeMode);
+```
+
+`(state) => state.language` 是 selector。它不是事件回调，而是“从完整 store state 里挑出一块值”的函数。可以拆成这样理解：
+
+```tsx
+const selectLanguage = (state: PreferencesState) => state.language;
+const language = usePreferencesStore(selectLanguage);
+```
+
+Zustand 的核心机制可以简化成下面几步：
+
+1. `create(...)` 创建一个 store，里面保存当前 state。
+2. store 里面有一个 listeners 集合，用来保存所有订阅者。
+3. 组件调用 `usePreferencesStore(selector)` 时，React 会通过 Zustand 订阅这个 store。
+4. 调用 `set(...)` 修改 store 时，Zustand 会更新 state，然后通知 listeners。
+5. React 收到通知后重新执行 selector，拿到新的 selected value。
+6. 如果新旧 selected value 不一样，React 就重新渲染这个组件。
+
+可以用伪代码理解：
+
+```ts
+let state = initialState;
+const listeners = new Set<() => void>();
+
+function set(partialState) {
+  state = { ...state, ...partialState };
+  listeners.forEach((listener) => listener());
+}
+
+function subscribe(listener) {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+}
+```
+
+React 组件这一侧大概是：
+
+```ts
+const selectedValue = selector(store.getState());
+store.subscribe(() => {
+  const nextSelectedValue = selector(store.getState());
+  // selected value 变化时，React 安排组件重新渲染。
+});
+```
+
+真实实现会更严谨：Zustand React 版使用 React 的 `useSyncExternalStore` 连接外部 store。这个 Hook 是 React 官方提供的机制，用来让 React 组件安全地订阅外部状态源。
+
+相关官方文档：
+
+- [Zustand useStore](https://zustand.docs.pmnd.rs/reference/hooks/use-store)：说明 store hook 可以接收 selector，并返回 selector 从当前 state 中选出的数据。
+- [Zustand Introduction](https://zustand.docs.pmnd.rs/getting-started/introduction)：介绍 `create`、`set`、store hook 和基础使用方式。
+- [Zustand create API](https://zustand.docs.pmnd.rs/apis/create)：介绍 `create(...)` 如何创建绑定到 React 的 store hook。
+- [React useSyncExternalStore 中文文档](https://zh-hans.react.dev/reference/react/useSyncExternalStore)：解释 React 如何订阅外部 store，并在 store 改变时重新读取快照、必要时重新渲染组件。
+
+因此这句代码的含义是：
+
+```tsx
+const language = usePreferencesStore((state) => state.language);
+```
+
+“从偏好 store 里取出 `language`，并且当 `language` 这个选择结果变化时，让当前组件拿到新值并重新渲染。”
+
+需要注意：selector 最好返回稳定的小值，比如字符串、数字、布尔值或 store 里的函数。如果 selector 每次都返回新对象：
+
+```tsx
+const preferences = usePreferencesStore((state) => ({
+  language: state.language,
+  themeMode: state.themeMode,
+}));
+```
+
+这个对象每次执行都是新引用，更容易触发额外渲染。项目里更常见的写法是拆开订阅：
+
+```tsx
+const language = usePreferencesStore((state) => state.language);
+const themeMode = usePreferencesStore((state) => state.themeMode);
+```
 
 ### 配置器状态
 
