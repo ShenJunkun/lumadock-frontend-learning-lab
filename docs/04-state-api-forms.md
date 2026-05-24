@@ -66,6 +66,29 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 - `BrowserRouter` 提供前端路由能力。
 - `usePreferencesStore` 把语言、主题状态同步到 i18n、DOM 和 Ant Design。
 
+如果想查这些 import 背后的文档，可以按“包名”和“导入名”去找：
+
+| import | 来自哪里 | 当前项目里负责什么 | 推荐文档入口 |
+| --- | --- | --- | --- |
+| `QueryClientProvider` | `@tanstack/react-query` | 把 `queryClient` 提供给整棵 React 树，让页面里的 `useQuery` / `useMutation` 能共享请求缓存 | [TanStack Query 中文文档](https://zh-hans.tanstack.dev/query/latest/docs/framework/react/overview) / [TanStack Query Docs](https://tanstack.com/query/latest/docs/framework/react/overview) |
+| `App as AntdRuntimeApp` | `antd` | Ant Design 的运行时上下文，给 message、modal、notification 等全局反馈组件提供环境；改名是为了避免和项目自己的 `App` 重名 | [Ant Design App 包裹组件](https://ant.design/components/app-cn) |
+| `ConfigProvider` | `antd` | 给 Ant Design 组件统一设置语言、主题、组件配置 | [Ant Design ConfigProvider](https://ant.design/components/config-provider-cn) |
+| `enUS` / `zhCN` | `antd/locale/*` | Ant Design 内置语言包，配合 `ConfigProvider locale={...}` 使用 | [Ant Design 国际化](https://ant.design/docs/react/i18n-cn) |
+| `useEffect` | `react` | 在状态变化后执行副作用，比如切换 i18n 语言、应用 DOM 主题、监听系统主题变化 | [React useEffect 中文文档](https://zh-hans.react.dev/reference/react/useEffect) |
+| `BrowserRouter` | `react-router-dom` | 让应用使用浏览器地址栏和 history 实现前端路由 | [React Router BrowserRouter](https://reactrouter.com/api/declarative-routers/BrowserRouter) |
+| `App` | `../App` | 项目自己的主应用组件，真正包含路由、页面和页面外壳 | 本项目 `apps/web/src/App.tsx` |
+| `i18n` | `../i18n` | 项目自己的 i18next 实例，`AppProviders` 会调用 `i18n.changeLanguage(language)` 切换语言 | [i18next API](https://www.i18next.com/overview/api) |
+| `queryClient` | `../lib/queryClient` | 项目自己的 React Query client 配置，定义缓存、重试、窗口聚焦刷新等默认行为 | [TanStack Query QueryClient](https://tanstack.com/query/latest/docs/reference/QueryClient) |
+| `applyDocumentTheme` | `../store/preferencesStore` | 项目自己的 DOM 主题应用函数，负责设置 `data-theme`、`dark` class 和 `color-scheme` | 本项目 `apps/web/src/store/preferencesStore.ts` |
+| `usePreferencesStore` | `../store/preferencesStore` | 项目自己的 Zustand 偏好 store，保存语言、主题和系统主题解析结果 | [Zustand Docs](https://zustand.docs.pmnd.rs/) |
+| `createAntdTheme` | `../theme/antdTheme` | 项目自己的 Ant Design theme 工厂，根据明暗主题生成组件 token | [Ant Design 定制主题](https://ant.design/docs/react/customize-theme-cn) |
+
+这类 import 的查文档方法是：
+
+1. 看到 `"react"`、`"antd"`、`"@tanstack/react-query"` 这种包名，先去对应库的官方文档。
+2. 看到 `"../xxx"` 这种相对路径，先在项目里跳转到对应文件，因为它是本项目自己封装的模块。
+3. 看到 `App as AntdRuntimeApp` 这种写法，说明导入时做了重命名：外部导出名叫 `App`，当前文件里为了避开重名，把它叫作 `AntdRuntimeApp`。
+
 所以可以这样记：
 
 ```text
