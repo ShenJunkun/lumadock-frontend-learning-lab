@@ -456,6 +456,127 @@ const AdminPage = lazy(() => import("./pages/AdminPage"));
 
 ## JavaScript 常用语法
 
+### 基本数据类型、对象和集合
+
+JavaScript 的值可以先分成两大类：基本数据类型和对象类型。
+
+基本数据类型也叫 primitive，常见有 7 种：
+
+| 类型 | 例子 | 说明 |
+| --- | --- | --- |
+| `number` | `123`、`3.14`、`NaN`、`Infinity` | 普通数字，整数和小数都用它表示 |
+| `bigint` | `9007199254740993n` | 大整数，适合超过 `number` 安全范围的整数 |
+| `string` | `"hello"` | 字符串 |
+| `boolean` | `true`、`false` | 布尔值 |
+| `undefined` | `undefined` | 声明了变量但还没有值 |
+| `null` | `null` | 主动表示“这里没有值” |
+| `symbol` | `Symbol("id")` | 唯一标识，业务代码里相对少见 |
+
+一个容易踩的老坑是：
+
+```ts
+typeof null; // "object"
+```
+
+这是 JavaScript 的历史遗留行为。实际理解时，`null` 仍然表示一个特殊的空值。
+
+除了这些基本类型，大部分复杂数据都属于对象类型：
+
+```ts
+const user = {
+  name: "Ada",
+  age: 18,
+};
+
+user.name;
+user["name"];
+```
+
+普通对象 `{}` 很像 C++ 的 `struct`、Java 的对象和简单 key-value 表的混合体。项目里经常用对象表达 API payload、组件 props、配置项和 store 状态。
+
+JavaScript 也提供了一组常用集合和标准对象：
+
+| 概念 | JavaScript 写法 | 类似 Java | 类似 C++ |
+| --- | --- | --- | --- |
+| 动态数组 | `Array` / `[]` | `ArrayList` | `std::vector` |
+| 哈希映射 | `Map` | `HashMap` | `std::unordered_map` |
+| 不重复集合 | `Set` | `HashSet` | `std::set` / `std::unordered_set` |
+| 普通键值对象 | `{}` | `Map` 或普通对象 | `struct` / map |
+| 异步结果 | `Promise` | `CompletableFuture` | `std::future` |
+
+数组是前端最常用的集合：
+
+```ts
+const names = ["Ada", "Grace", "Linus"];
+
+names[0]; // "Ada"
+names.push("Margaret");
+names.map((name) => name.toUpperCase());
+names.filter((name) => name.startsWith("A"));
+```
+
+`Map` 更接近传统意义上的哈希表：
+
+```ts
+const stockBySku = new Map<string, number>();
+
+stockBySku.set("dock-pro", 12);
+stockBySku.get("dock-pro"); // 12
+stockBySku.has("dock-pro"); // true
+```
+
+普通对象也能表达 key-value：
+
+```ts
+const stockBySku = {
+  "dock-pro": 12,
+  "dock-air": 20,
+};
+```
+
+区别是普通对象的 key 通常是字符串或 symbol，而 `Map` 的 key 可以是任意值。业务配置、JSON 数据和 props 常用普通对象；需要更像哈希表的增删查，或者 key 不是字符串时，可以考虑 `Map`。
+
+`Set` 用来保存不重复的值：
+
+```ts
+const roles = new Set(["admin", "viewer", "admin"]);
+
+roles.has("admin"); // true
+roles.size; // 2
+```
+
+数组去重时也经常见到：
+
+```ts
+const uniqueRoles = [...new Set(["admin", "viewer", "admin"])];
+// ["admin", "viewer"]
+```
+
+还有一些常见标准对象：
+
+| 对象 | 用途 |
+| --- | --- |
+| `Date` | 日期时间 |
+| `RegExp` | 正则表达式 |
+| `Promise` | 异步任务结果 |
+| `JSON` | JSON 序列化和解析 |
+| `Math` | 数学函数 |
+| `URL` | URL 解析和拼接 |
+| `Error` | 错误对象 |
+| `Intl` | 国际化格式化 |
+
+浏览器前端还会使用很多 Web API。它们不是 JavaScript 语言本身的一部分，而是浏览器提供的能力：
+
+| Web API | 用途 | 项目里的关系 |
+| --- | --- | --- |
+| `document` / `window` | 访问页面和浏览器窗口 | `main.tsx` 用 `document.getElementById("root")` 找挂载点 |
+| `fetch` | 发 HTTP 请求 | API client 用它请求后端 |
+| `localStorage` / `sessionStorage` | 浏览器本地存储 | 保存登录态、偏好和预约草稿 |
+| `navigator` | 浏览器和设备能力入口 | PWA 注册时检查 `navigator.serviceWorker` |
+| `indexedDB` | 浏览器本地数据库 | 当前项目没有使用 |
+
+所以可以这样记：JavaScript 语言本身提供基本类型、对象、数组、`Map`、`Set`、`Promise` 等标准能力；浏览器再额外提供 `document`、`fetch`、storage、Service Worker 这些前端运行环境能力。
+
 ### `const`、`let` 和不可变思路
 
 项目中优先使用 `const`：
