@@ -598,6 +598,296 @@ export const queryClient = new QueryClient({
 - `GET /api/products/{id}`
 - `GET /api/stats`
 
+## 前后端调用机制
+
+这个项目是前后端分离架构：
+
+```text
+浏览器 React 前端：http://127.0.0.1:5173
+  -> fetch HTTP 请求
+FastAPI 后端：http://127.0.0.1:8001
+  -> SQLAlchemy
+SQLite 数据库
+```
+
+完整链路可以这样看：
+
+```text
+页面组件
+  -> apps/web/src/api/*
+    -> packages/api-client
+      -> fetch(...)
+        -> FastAPI 路由
+          -> Pydantic 校验请求 / 响应模型
+            -> SQLAlchemy 读写 SQLite
+              -> JSON 响应
+                -> Zod 校验响应结构
+                  -> React Query 缓存
+                    -> 页面重新渲染
+```
+
+### 前端 API 分层
+
+前端不是在页面里直接写 `fetch(...)`。项目把 API 调用拆成三层：
+
+| 层级 | 文件 | 作用 |
+| --- | --- | --- |
+| 页面和组件 | `apps/web/src/pages/*`、`apps/web/src/components/*` | 调用 `useProducts()`、`useMutation(...)` 等 hook 或 API 函数，处理 loading、error、data |
+| Web API 包装 | `apps/web/src/api/*` | 给 React 页面提供更贴近业务的函数和 hooks，例如 `useProducts()`、`login()`、`submitLead()` |
+| 共享 API client | `packages/api-client/src/client.ts` | 拼接 base URL、追加 token、调用 `fetch`、处理 HTTP 错误、用 Zod 校验响应 |
+
+`apps/web/src/api/client.ts` 负责读取后端地址：
+
+```ts
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
+```
+
+开发环境中这个值来自 `apps/web/.env.development`：
+
+```text
+VITE_API_BASE_URL=http://127.0.0.1:8001
+```
+
+然后创建共享 client：
+
+```ts
+export const lumadockApiClient = createLumadockApiClient({
+  baseUrl: API_BASE_URL,
+  getAuthToken: () => authTokenProvider(),
+});
+```
+
+`packages/api-client/src/client.ts` 里真正发请求：
+
+```ts
+const response = await (fetchFn ?? fetch)(`${normalizedBaseUrl}${path}`, {
+  ...init,
+  headers: {
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    "Content-Type": "application/json",
+    ...init?.headers,
+  },
+});
+```
+
+这意味着：
+
+- 每个请求都会拼成 `VITE_API_BASE_URL + path`。
+- 如果已经登录，会自动追加 `Authorization: Bearer <token>`。
+- 请求体和响应默认按 JSON 处理。
+- 非 2xx 响应会抛出 `ApiError`。
+- 响应回来后会用 Zod schema 校验结构，例如 `ProductsSchema.parse(...)`。
+
+### 产品列表请求链路
+
+`CatalogPage` 里读取产品列表：
+
+```tsx
+const productsQuery = useProducts();
+```
+
+`useProducts()` 在 `apps/web/src/api/products.ts`：
+
+```ts
+export function useProducts() {
+  return useQuery({
+    queryFn: getProducts,
+    queryKey: productQueryKeys.list(),
+  });
+}
+```
+
+React Query 根据 `queryKey` 管理缓存，根据 `queryFn` 发请求。`getProducts()` 最后会调用：
+
+```ts
+lumadockApiClient.getProducts()
+```
+
+共享 client 再请求：
+
+```text
+GET http://127.0.0.1:8001/api/products
+```
+
+后端路由在 `apps/api/app/main.py`：
+
+```py
+@app.get("/api/products", response_model=list[ProductRead])
+def list_products(session: Session = Depends(get_session)) -> list[Product]:
+    return list(session.scalars(select(Product).order_by(Product.price)).all())
+```
+
+这里的机制是：
+
+1. FastAPI 收到 `GET /api/products`。
+2. `Depends(get_session)` 创建 SQLAlchemy session。
+3. SQLAlchemy 查询 `Product` 表。
+4. `response_model=list[ProductRead]` 把 ORM 对象序列化成 JSON。
+5. JSON 返回前端。
+6. 前端 `ProductsSchema.parse(...)` 校验响应。
+7. React Query 把数据放进缓存，页面用 `productsQuery.data` 渲染。
+
+### 表单提交链路
+
+预约表单在 `LeadForm.tsx`。提交时：
+
+```tsx
+const onSubmit = handleSubmit(async (values) => {
+  await mutation.mutateAsync({
+    product_id: submittedProductId,
+    name: values.name,
+    email: values.email,
+    configuration: snapshot(),
+  });
+});
+```
+
+前端调用：
+
+```ts
+submitLead(payload)
+```
+
+最后请求：
+
+```text
+POST http://127.0.0.1:8001/api/leads
+```
+
+后端路由：
+
+```py
+@app.post("/api/leads", response_model=LeadRead, status_code=status.HTTP_201_CREATED)
+def create_lead(payload: LeadCreate, session: Session = Depends(get_session)) -> Lead:
+    if payload.product_id and session.get(Product, payload.product_id) is None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unknown product")
+
+    lead = Lead(**payload.model_dump())
+    session.add(lead)
+    session.commit()
+    session.refresh(lead)
+    return lead
+```
+
+这里前后端各自做一层校验：
+
+- 前端表单用 React Hook Form + Zod 校验输入体验。
+- 后端用 Pydantic `LeadCreate` 校验真实请求体。
+- 后端写入 SQLite 后返回 `LeadRead`。
+- 前端用 Zod `LeadResponseSchema` 校验响应结构。
+
+### 登录和鉴权链路
+
+登录页调用：
+
+```tsx
+const response = await mutation.mutateAsync(values);
+setSession(response);
+```
+
+前端 API：
+
+```ts
+login(payload)
+```
+
+最终请求：
+
+```text
+POST /api/auth/login
+```
+
+后端路由在 `apps/api/app/auth.py`：
+
+```py
+@router.post("/login", response_model=TokenResponse)
+def login(payload: LoginRequest, session: Session = Depends(get_session)) -> TokenResponse:
+    user = session.scalar(select(User).where(User.email == payload.email))
+    if user is None or not verify_password(payload.password, user.password_hash):
+        raise unauthorized("Invalid email or password")
+
+    return TokenResponse(access_token=create_access_token(user), user=UserRead.model_validate(user))
+```
+
+登录成功后，前端 `authStore.setSession()` 会：
+
+1. 把 token 和 user 写入 `localStorage`。
+2. 更新 Zustand 登录态。
+3. 让 API client 的 token provider 可以读到 token。
+
+`authStore.ts` 末尾这句负责把登录态接到 API client：
+
+```ts
+setAuthTokenProvider(() => useAuthStore.getState().token);
+```
+
+之后请求后台接口时，共享 API client 会自动带上：
+
+```text
+Authorization: Bearer <token>
+```
+
+后台 leads 接口在 `apps/api/app/admin.py`：
+
+```py
+@router.get("/leads", response_model=list[AdminLeadRead])
+def list_admin_leads(
+    _current_user: User = Depends(require_admin),
+    session: Session = Depends(get_session),
+) -> list[AdminLeadRead]:
+```
+
+`Depends(require_admin)` 会：
+
+1. 从 `Authorization` header 读取 bearer token。
+2. 解码 JWT。
+3. 查数据库里的用户。
+4. 检查用户是否 active。
+5. 检查角色是否是 `admin`。
+
+未登录会返回 401，非 admin 会返回 403。
+
+### CORS 为什么能请求成功
+
+前端开发服务器在 `5173`，后端在 `8001`，端口不同就是跨源请求。后端在 `apps/api/app/main.py` 配置了 CORS：
+
+```py
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=get_cors_origins(),
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+```
+
+默认允许：
+
+```text
+http://127.0.0.1:5173
+http://localhost:5173
+```
+
+所以浏览器允许前端页面请求本地 FastAPI。
+
+### Mock 和真实后端
+
+`main.tsx` 会根据环境变量决定是否启用 MSW mock：
+
+```ts
+if (import.meta.env.VITE_ENABLE_MOCKS !== "true") {
+  return;
+}
+```
+
+如果启用 mock，`apps/web/src/mocks/handlers.ts` 会拦截 `/api/products`、`/api/leads`、`/api/auth/login` 等请求，返回前端本地模拟数据。这样即使 FastAPI 没启动，也能练习页面交互。
+
+如果不启用 mock，请求就会走真实链路：
+
+```text
+React 页面 -> api-client fetch -> FastAPI -> SQLite
+```
+
 React Query 和 Zustand 的区别：
 
 | 问题 | 推荐机制 |
