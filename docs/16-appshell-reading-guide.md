@@ -130,6 +130,104 @@ export function AppShell({ children }: AppShellProps) {
 
 意思是：把当前页面内容放进 `<main>` 主内容区域。
 
+## `<main>` 里的 `children` 从哪里来
+
+这里要区分两个名字：
+
+| 名称       | 是什么                                      | 在项目里的位置                         |
+| ---------- | ------------------------------------------- | -------------------------------------- |
+| `main.tsx` | 应用入口文件，负责把 React 挂到浏览器页面上 | `apps/web/src/main.tsx`                |
+| `<main>`   | HTML 语义标签，表示页面主体内容区域         | `apps/web/src/components/AppShell.tsx` |
+
+`AppShell.tsx` 里的这一段：
+
+```tsx
+<main id="main-content" tabIndex={-1}>
+  {children}
+</main>
+```
+
+不是在调用 `main.tsx`。它是在渲染一个 HTML `<main>` 标签，然后把父组件传进来的 `children` 放进去。
+
+完整链路可以这样看：
+
+```text
+main.tsx
+  -> <AppProviders />
+    -> <BrowserRouter>
+      -> <App />
+        -> <AppShell>
+          -> 这里夹着的内容会变成 AppShell 的 children
+        -> </AppShell>
+```
+
+在 `App.tsx` 里，`AppShell` 是这样被使用的：
+
+```tsx
+export function App() {
+  const location = useLocation();
+
+  return (
+    <AppShell>
+      <RouteMetadataManager />
+      <RouteTelemetryRecorder />
+      <ErrorBoundary resetKey={location.pathname} title="Page unavailable">
+        <Suspense fallback={<RouteSkeleton />}>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/products" element={<CatalogPage />} />
+            <Route
+              path="/products/:productId"
+              element={<ProductDetailPage />}
+            />
+            <Route path="/book" element={<BookingPage />} />
+            <Route path="/learn" element={<LearnPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
+      </ErrorBoundary>
+    </AppShell>
+  );
+}
+```
+
+所以 `children` 不是一个神秘变量，它就是 `<AppShell>...</AppShell>` 中间夹着的这些 React 内容。
+
+这批 `children` 里包含几类东西：
+
+| 子内容                                    | 作用                           | 是否直接显示在页面上   |
+| ----------------------------------------- | ------------------------------ | ---------------------- |
+| `<RouteMetadataManager />`                | 根据路由更新页面标题和描述     | 通常不直接显示         |
+| `<RouteTelemetryRecorder />`              | 记录路由访问事件               | 不直接显示             |
+| `<ErrorBoundary>`                         | 捕获页面渲染错误，避免整页白屏 | 只有出错时显示兜底 UI  |
+| `<Suspense fallback={<RouteSkeleton />}>` | 等懒加载页面组件加载完成       | 加载中显示骨架屏       |
+| `<Routes>` / `<Route>`                    | 根据 URL 决定当前显示哪个页面  | 会显示匹配到的页面组件 |
+
+用户看到的主内容通常来自 `<Routes>` 选中的那个页面：
+
+| 当前 URL                     | `<Routes>` 选中的页面   |
+| ---------------------------- | ----------------------- |
+| `/`                          | `<HomePage />`          |
+| `/products`                  | `<CatalogPage />`       |
+| `/products/luma-dock-studio` | `<ProductDetailPage />` |
+| `/book`                      | `<BookingPage />`       |
+| `/learn`                     | `<LearnPage />`         |
+| `/login`                     | `<LoginPage />`         |
+| 其他未匹配路径               | `<NotFoundPage />`      |
+
+因此可以把页面想象成三层：
+
+```text
+AppShell 固定外壳
+  header/nav 一直存在
+  main 里放 children
+    children 里由 Routes 选出当前页面
+  footer 一直存在
+```
+
+这就是为什么点击顶部导航时，页眉和页脚不会消失，只有 `<main>` 里的页面内容会变。
+
 ## `navItems` 是导航配置表
 
 ```tsx
