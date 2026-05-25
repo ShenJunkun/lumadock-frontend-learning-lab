@@ -151,7 +151,7 @@
 - `apps/web/src/theme/antdTheme.ts`
 - `packages/ui/src/designTokens.ts`
 - `docs/08-p3-architecture.md`
-- `docs/15-antd-components.md`
+- `docs/15-ant-design-components.md`
 
 重点问题：
 
@@ -277,7 +277,7 @@
 - `apps/web-vue/src/components/`
 - `packages/ui-vue/src/`
 - `docs/03-react-components-routing.md`
-- `docs/16-appshell-reading-guide.md`
+- `docs/16-app-shell-reading-guide.md`
 
 ## 8. 状态、API、表单
 

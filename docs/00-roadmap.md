@@ -17,7 +17,7 @@
 11. 构建与提交：`web:*`、`vue:*`、lint、format、typecheck、test、build、git commit。
 12. 技术选型：理解 React Web、React Native、Vue3、uni-app、Flutter 和全栈路线的取舍，见 [13 技术选型对比](13-technology-choices.md)。
 
-读 React 页面骨架时，可以配合 [16 AppShell 逐段阅读指南](16-appshell-reading-guide.md) 学习 JSX 标签来源、React Router 导航、登录态条件渲染和 Ant Design 使用边界。读 Vue 并行实现时，重点对照 `apps/web-vue`：`App.vue` 里的 `<RouterView />`、组件里的 `<template>` / `<script setup>`、Pinia store、Vue Router 守卫、Vue Query hook，以及 `packages/ui-vue` 中和 `packages/ui` 对应的共享组件。
+读 React 页面骨架时，可以配合 [16 AppShell 逐段阅读指南](16-app-shell-reading-guide.md) 学习 JSX 标签来源、React Router 导航、登录态条件渲染和 Ant Design 使用边界。读 Vue 并行实现时，重点对照 `apps/web-vue`：`App.vue` 里的 `<RouterView />`、组件里的 `<template>` / `<script setup>`、Pinia store、Vue Router 守卫、Vue Query hook，以及 `packages/ui-vue` 中和 `packages/ui` 对应的共享组件。
 
 ## 项目边界
 
