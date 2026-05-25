@@ -1,4 +1,4 @@
-# 15 Ant Design 组件清单与项目用法
+# 15 Ant Design 与 Ant Design Vue 组件清单与项目用法
 
 本项目在 `apps/web/package.json` 中使用 `antd@^6.3.7`，当前锁定安装版本是 `6.3.7`。Vue 并行应用在 `apps/web-vue/package.json` 中使用 `ant-design-vue@^4.2.6`。Ant Design 在这个项目里主要负责两件事：
 
