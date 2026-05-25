@@ -2,12 +2,24 @@
 
 ## 前端验证
 
+React 应用验证：
+
 ```powershell
 npm.cmd run web:lint
 npm.cmd run web:format
 npm.cmd run web:typecheck
 npm.cmd run web:test
 npm.cmd run web:build
+```
+
+Vue 并行应用验证：
+
+```powershell
+npm.cmd run vue:lint
+npm.cmd run vue:format
+npm.cmd run vue:typecheck
+npm.cmd run vue:test
+npm.cmd run vue:build
 ```
 
 测试覆盖：
@@ -18,6 +30,8 @@ npm.cmd run web:build
 - ErrorBoundary、Skeleton、Route focus、偏好设置。
 - 表单 zod 校验。
 - Zustand 配置器状态。
+- Pinia 认证、偏好和配置器状态。
+- Vue reactive + Zod 预约表单。
 
 ## 后端验证
 
@@ -39,21 +53,37 @@ npm.cmd run api:test
 
 ## E2E
 
+React 应用：
+
 ```powershell
 npm.cmd run web:e2e
 ```
 
-Playwright 覆盖首页、目录、详情、预约提交、登录权限和基础 A11y。E2E 通过 `VITE_ENABLE_MOCKS=true` 启用 MSW，因此不依赖真实后端。
-`test:e2e` 脚本会自动启动并关闭 Vite dev server。
-E2E 也覆盖访客跳登录、admin 登录进入后台、viewer 被角色权限拦截。
+Vue 并行应用：
+
+```powershell
+npm.cmd run vue:e2e
+```
+
+Playwright 覆盖首页、目录、详情、预约提交、登录权限和基础 A11y。E2E 通过 `VITE_ENABLE_MOCKS=true` 启用 MSW，因此不依赖真实后端。`test:e2e` 脚本会自动启动并关闭 Vite dev server。E2E 也覆盖访客跳登录、admin 登录进入后台、viewer 被角色权限拦截。
 
 ## Bundle 分析
+
+React 应用：
 
 ```powershell
 npm.cmd run web:build:analyze
 ```
 
+Vue 并行应用：
+
+```powershell
+npm.cmd run vue:build:analyze
+```
+
 该命令会在 `apps/web/dist/bundle-report.html` 生成 `rollup-plugin-visualizer` 报告，用来观察 Antd、Three、Framer Motion、Recharts 等依赖体积。
+
+Vue 报告在 `apps/web-vue/dist/bundle-report.html`，重点观察 Vue、Ant Design Vue、Vue ECharts、Three.js、Vue Query 等依赖体积。
 
 ## git 提交流程
 
@@ -77,13 +107,17 @@ docs: complete project tutorial and runbook
 
 ## 代码规范
 
-前端使用 ESLint 做 TypeScript、React Hooks 和 React Refresh 规则检查，Prettier 负责格式统一：
+前端使用 ESLint 做 TypeScript、React Hooks、React Refresh 和 Vue SFC 规则检查，Prettier 负责格式统一：
 
 ```powershell
 npm.cmd run web:lint
 npm.cmd --workspace @lumadock/web run lint:fix
 npm.cmd run web:format
 npm.cmd --workspace @lumadock/web run format
+npm.cmd run vue:lint
+npm.cmd --workspace @lumadock/web-vue run lint:fix
+npm.cmd run vue:format
+npm.cmd --workspace @lumadock/web-vue run format
 ```
 
 提交前可安装 git hook：

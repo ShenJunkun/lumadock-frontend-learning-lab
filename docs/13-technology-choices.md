@@ -4,18 +4,20 @@
 
 ## 当前项目用的是什么
 
-本项目不是 React Native，也不是 Vue3 / uni-app。当前技术栈是：
+本项目不是 React Native，也不是 uni-app。当前技术栈是 React Web 主应用 + Vue3 并行实现 + FastAPI 后端：
 
 ```text
-前端：React + TypeScript + Vite
+前端主应用：React + TypeScript + Vite
+前端并行实现：Vue3 + TypeScript + Vite
 后端：FastAPI + SQLite
 工程管理：npm workspaces monorepo
 ```
 
-它是一个运行在浏览器里的 React Web 项目。启动前端后，通过浏览器访问：
+它们都是运行在浏览器里的 Web App。启动前端后，通过浏览器访问：
 
 ```text
-http://127.0.0.1:5173
+React Web：http://127.0.0.1:5173
+Vue3 Web：http://127.0.0.1:5174
 ```
 
 判断它是 React Web 的几个明显信号：
@@ -24,6 +26,15 @@ http://127.0.0.1:5173
 - `apps/web/index.html` 是浏览器入口。
 - 页面代码使用浏览器里的 HTML 标签和 CSS，例如 `div`、`section`、`button`、`img`。
 - 最终构建产物是 HTML、CSS、JavaScript 静态资源。
+
+判断 Vue 并行实现的几个明显信号：
+
+- `apps/web-vue/package.json` 里有 `vue`、`vue-router`、`pinia`、`@vitejs/plugin-vue`。
+- `apps/web-vue/index.html` 是浏览器入口。
+- 页面代码使用 `.vue` 单文件组件、`<template>`、`<script setup>`、`RouterLink` 和 `RouterView`。
+- 最终构建产物同样是 HTML、CSS、JavaScript 静态资源。
+
+因此更准确地说：本项目主线仍是 React Web，Vue3 作为并行学习实现保留在 `apps/web-vue`。两者共享 FastAPI、`@lumadock/api-client`、产品数据和设计语言，不代表项目切换成 uni-app 或移动端框架。
 
 ## React Web 和 React Native
 
@@ -56,7 +67,7 @@ React Web 是用 React 做浏览器网页和 Web App。
 React Native 是用 React 做 iOS / Android 原生 App。
 ```
 
-本项目属于第一种：React Web。
+本项目的主应用属于第一种：React Web。Vue 并行实现也属于浏览器 Web App，只是使用 Vue3 组件模型。
 
 ## Vue3 和 uni-app
 
@@ -66,6 +77,8 @@ Vue3 是另一个主流前端框架，常用于浏览器里的 Web App。它和 
 React Web：React + TypeScript + Vite / Next.js
 Vue Web：Vue3 + TypeScript + Vite / Nuxt
 ```
+
+当前仓库已经同时保留这两条 Web 路线：`apps/web` 是 React Web 主应用，`apps/web-vue` 是 Vue3 Web 并行实现。它们不是跨端方案；两者都运行在浏览器 DOM 上。
 
 uni-app 是基于 Vue 语法的跨端框架。它的目标是用一套主代码发布到多个端：
 
@@ -227,4 +240,4 @@ React 路线：React Web + React Native
 Vue 路线：Vue3 Web + uni-app
 ```
 
-本项目现在选择 React Web + FastAPI，是为了先把现代前端工程、API 调用、状态管理、测试、构建和部署这些基础能力练扎实。它不是最终唯一答案，而是一条适合前端学习的起点路线。
+本项目现在以 React Web + FastAPI 作为主线，同时保留 Vue3 并行实现，是为了先把现代前端工程、API 调用、状态管理、测试、构建和部署这些基础能力练扎实，再用同一个产品对照不同框架的组件模型和生态取舍。它不是最终唯一答案，而是一条适合前端学习的起点路线。

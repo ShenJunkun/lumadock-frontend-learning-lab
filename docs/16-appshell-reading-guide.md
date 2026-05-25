@@ -613,6 +613,57 @@ Ant Design 在项目里不是不用，而是用在更复杂的地方：登录表
 </div>
 ```
 
+## Vue AppShell 对照
+
+Vue 并行应用的外壳在 `apps/web-vue/src/components/AppShell.vue`。它和 React 版承担同一件事：固定 header、nav、main、footer，把当前路由页面放进主内容区。
+
+最重要的对应关系是：
+
+| React AppShell                      | Vue AppShell                               | 含义                     |
+| ----------------------------------- | ------------------------------------------ | ------------------------ |
+| `children: ReactNode`               | `<slot />`                                 | 父级传入的页面内容       |
+| `{children}`                        | `<slot />`                                 | 把页面内容放进 `<main>`  |
+| `<NavLink to="/products">`          | `<RouterLink to="/products">`              | 单页应用内部导航         |
+| `className={({ isActive }) => ...}` | `RouterLink` 的 active class 或 slot state | 当前路由高亮             |
+| `useNavigate()`                     | `useRouter()`                              | 在代码里主动跳转         |
+| `useTranslation()`                  | `useI18n()`                                | 根据当前语言读取文案     |
+| Zustand hook                        | Pinia store                                | 读取登录、语言、主题状态 |
+| `useEffect(...)`                    | `watch(...)` / `onMounted(...)`            | 状态变化后的副作用       |
+
+React 版 `AppShell` 的核心是：
+
+```tsx
+<main id="main-content" tabIndex={-1}>
+  {children}
+</main>
+```
+
+Vue 版对应：
+
+```vue
+<main id="main-content" tabindex="-1">
+  <slot />
+</main>
+```
+
+所以 `children` 和 `<slot />` 是同一个概念的两种框架表达：外壳组件不关心里面是哪一个页面，只负责给页面留一个位置。
+
+Vue 模板里的语法也可以这样对照：
+
+- React 的 `{navItems.map(...)}` 对应 Vue 的 `v-for="item in navItems"`。
+- React 的 `isAuthenticated && (...)` 对应 Vue 的 `v-if="isAuthenticated"`。
+- React 的三元表达式对应 Vue 的 `v-if` / `v-else`。
+- React 的 `onClick={handleLogout}` 对应 Vue 的 `@click="handleLogout"`。
+- React 的 `value={language}` + `onChange={...}` 对应 Vue 的 `v-model` 或 `:value` + `@change`。
+
+读 Vue 版时，推荐入口顺序是：
+
+1. `apps/web-vue/src/main.ts`：看 Pinia、Vue Query、Vue Router、Ant Design Vue、vue-i18n 如何安装。
+2. `apps/web-vue/src/App.vue`：看 `AppShell` 如何包住当前路由页面。
+3. `apps/web-vue/src/components/AppShell.vue`：对照本文读 header、nav、slot、登录态和偏好选择。
+4. `apps/web-vue/src/router/index.ts`：看路由表、route meta 和守卫。
+5. `apps/web-vue/src/stores/authStore.ts` / `preferencesStore.ts`：看 `isAuthenticated`、语言和主题从哪里来。
+
 ## 读这个文件的推荐顺序
 
 1. 先看 `import`，确认每个名字来自哪里。
