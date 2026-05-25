@@ -1,0 +1,28 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "allowJs": false,
+    "jsx": "preserve",
+    "paths": {
+      "@lumadock/api-client": ["../../packages/api-client/src/index.ts"],
+      "@lumadock/api-client/*": ["../../packages/api-client/src/*"],
+      "@lumadock/ui-vue": ["../../packages/ui-vue/src/index.ts"],
+      "@lumadock/ui-vue/*": ["../../packages/ui-vue/src/*"]
+    },
+    "noEmit": true,
+    "types": [
+      "vite/client",
+      "vitest/globals",
+      "@testing-library/jest-dom",
+      "node"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "vite.config.ts",
+    "playwright.config.ts",
+    "e2e/**/*.ts",
+    "../../packages/ui-vue/src/**/*.ts"
+  ]
+}

@@ -34,6 +34,10 @@ apps/api/lumadock.db
 !apps/web/.env.development
 !apps/web/.env.production
 !apps/web/.env.test
+!apps/web-vue/.env.example
+!apps/web-vue/.env.development
+!apps/web-vue/.env.production
+!apps/web-vue/.env.test
 
 # Editors and OS
 .DS_Store

@@ -5,6 +5,7 @@
   "description": "Independent React + TypeScript + FastAPI frontend learning product lab.",
   "workspaces": [
     "apps/web",
+    "apps/web-vue",
     "apps/api",
     "packages/*"
   ],
@@ -17,6 +18,14 @@
     "web:build": "npm --workspace @lumadock/web run build",
     "web:build:analyze": "npm --workspace @lumadock/web run build:analyze",
     "web:e2e": "npm --workspace @lumadock/web run test:e2e",
+    "vue:dev": "npm --workspace @lumadock/web-vue run dev",
+    "vue:lint": "npm --workspace @lumadock/web-vue run lint",
+    "vue:format": "npm --workspace @lumadock/web-vue run format:check",
+    "vue:typecheck": "npm --workspace @lumadock/web-vue run typecheck",
+    "vue:test": "npm --workspace @lumadock/web-vue run test",
+    "vue:build": "npm --workspace @lumadock/web-vue run build",
+    "vue:build:analyze": "npm --workspace @lumadock/web-vue run build:analyze",
+    "vue:e2e": "npm --workspace @lumadock/web-vue run test:e2e",
     "api:dev": "npm --workspace @lumadock/api run dev",
     "api:test": "npm --workspace @lumadock/api run test",
     "api-client:typecheck": "npm --workspace @lumadock/api-client run typecheck",
